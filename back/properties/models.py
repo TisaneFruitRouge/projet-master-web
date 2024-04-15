@@ -5,7 +5,7 @@ import uuid
 
 class Property(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.UUIDField() # given by clerk
+    user_id = models.TextField() # given by clerk
     name = models.TextField()
     adress = models.TextField()
     lat = models.FloatField()
