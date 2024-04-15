@@ -50,7 +50,7 @@ export default function Navbar() {
           <NavigationMenuTrigger>Explorer</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              <ListItem href="/statistics" title="Statistiques globales">
+              <ListItem href="/statistics/global" title="Statistiques globales">
                 Explorer les statistiques globales.
               </ListItem>
               <ListItem href="/statistics/personal" title="Statistiques">

@@ -1,14 +1,14 @@
-import { EstimateNav } from "@/components/estimate/EstimateNav";
 import { Separator } from "@/components/ui/separator";
+import { StatisticsNav } from "@/components/stats/StatisticsNav";
 
-export default function EstimateLayout({
+export default function StatisticsLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
         <div className="flex flex-col gap-4 p-8">
-            <EstimateNav />
+            <StatisticsNav />
             <Separator />
             {children}
         </div>
