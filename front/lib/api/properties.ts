@@ -8,3 +8,7 @@ export async function getPropertiesOfUser(userID: string) {
 
     return data ?? [];
 }
+
+export async function addNewProperty(userId: string) {
+
+}

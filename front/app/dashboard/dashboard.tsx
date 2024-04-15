@@ -2,11 +2,21 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faEnvelope, faBath } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import Link from "next/link";
+import {auth} from "@clerk/nextjs";
+import {Property} from "@/lib/types/property";
+import {getPropertiesOfUser} from "@/lib/api/properties";
 library.add(faEnvelope, faBath);
 
 
+export default async function Dashboard() {
+	const {userId} = auth();
 
-export default function Dashboard() {
+	let properties:Property[] = [];
+
+	if (userId) {
+		properties = await getPropertiesOfUser(userId);
+	}
+
 	let list = [];
 
 	for (let i = 0; i < 2; i ++) {
