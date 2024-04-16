@@ -20,14 +20,10 @@ export default async function Home() {
   return (
 
     <main className="flex flex-col gap-4 pt-16 p-8">
-        <AddProperty triggerComponent={<Button className="w-36">Add new property</Button>} />
+      <AddProperty />
       <div className="flex justify-start flex-wrap gap-8">
-        {properties.map((property) => <PropertyCard property={property}/>)}
         <Dashboard/>
       </div>
-        <div className="flex juistify-start">
-        <Dashboard/>
-        </div>
     </main>
   );
 }

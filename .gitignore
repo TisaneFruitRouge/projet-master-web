@@ -2,6 +2,10 @@
 db.sqlite3
 .idea
 
+back/**/__pycache__/*
 */__pycache__/*
 *.py[cod]
 back/properties/migrations
+back/ai-models/*
+
+front/yarn.lock
