@@ -1,20 +1,23 @@
+
+export type PropertyType = 1 | 2 | 3 | 4; //1 = apartment, 2=house, 3=garage, 4=other
+
 export type Property = {
     id: string;
     user_id: string;
     name: string;
     adress: string;
-    lat: number;
-    long: number;
+    lat: number | null;
+    long: number | null;
     created_at: Date;
     description: string;
     surface: number;
-    propertyType: 1 | 2; //1 = apartment, 2=house
+    propertyType: PropertyType;
     hasElevator: boolean;
     hasGarden: boolean;
     hasParkingSpace: boolean;
-    yearOfConstruction: number;
+    yearOfConstruction: number | null;
     bedroom: number;
     floor: number;
     isFurnished : boolean;
-    cityDepartmentCode: number;
+    cityDepartmentCode: number | null;
 }   

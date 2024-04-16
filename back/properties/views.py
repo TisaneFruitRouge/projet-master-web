@@ -15,9 +15,24 @@ def property_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        print("connard")
         serializer = PropertySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def property(request):
+    """
+    Returns a single property by ID.
+    """
+    if request.method == 'GET':
+        try:
+            property = Property.objects.get(pk=request.query_params.get('id'))
+            serializer = PropertySerializer(property)
+            return Response(serializer.data)
+        except Property.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 
