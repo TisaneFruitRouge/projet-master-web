@@ -5,7 +5,6 @@ export async function getPropertiesOfUser(userID: string) {
     const URL = process.env.NEXT_PUBLIC_API_URL as string;
 
     const response = await fetch(`${URL}/api/users/${userID}/properties`);
-    console.log(response)
     const data = await response.json();
 
     return data ?? [];
@@ -44,4 +43,13 @@ export async function addNewProperty(userId: string, property: Property) {
         return newProperty
     } else return null;
 
+}
+
+export async function getProperty(id: string) {
+    const URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+    const response = await fetch(`${URL}/api/properties/${id}/`);
+    const data:Property | null = await response.json();
+
+    return data ?? null;
 }
