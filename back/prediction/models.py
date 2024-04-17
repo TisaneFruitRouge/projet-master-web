@@ -15,8 +15,8 @@ class Prediction(models.Model):
 
 class PredictionRequest(models.Model):
     hasElevator = models.BooleanField()
-    lat = models.IntegerField()
-    lon = models.IntegerField()
+    lat = models.FloatField()
+    lon = models.FloatField()
     surface = models.IntegerField()
     bedroom = models.IntegerField()
     floor = models.IntegerField()

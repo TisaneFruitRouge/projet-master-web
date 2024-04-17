@@ -1,4 +1,4 @@
-import { EstimationRequest } from "../types/estimation";
+import { EstimationRequest, EstimationResponse } from "../types/estimation";
 
 //api/prediction
 export async function getEstimation(request: EstimationRequest) {
@@ -15,7 +15,7 @@ export async function getEstimation(request: EstimationRequest) {
     )
 
     if (response.ok) {
-        const estimation: EstimationRequest = await response.json();
-        return estimation
+        const {estimated_price}: EstimationResponse = await response.json();
+        return estimated_price
     } else return null;
 }
