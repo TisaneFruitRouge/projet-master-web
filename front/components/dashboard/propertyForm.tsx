@@ -196,12 +196,13 @@ export default function AddProperty() {
 
 							<div className="sm:col-span-3">
 								<label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">Postal Code</label>
-								<Input 
+								<Input
+									type="number"
 									autoComplete="postal-code" 
 									id="postal-code" 
 									placeholder="Code Postal" 
 									value={postalInput}
-									onChange={(e) => setPostalInput(parseInt(e.target.value))}
+									onChange={(e) => setPostalInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -214,12 +215,12 @@ export default function AddProperty() {
 							<div className="sm:col-span-3">
 								<label htmlFor="surface" className="block text-sm font-medium leading-6 text-gray-900">Surface (m²)</label>
 								<Input 
-									type="number" 
+									type="number"
 									id="surface" 
 									placeholder="Surface" 
 									value={surfaceInput} 
 									min={0}
-									onChange={(e) => setSurfaceInput(parseInt(e.target.value))}
+									onChange={(e) => setSurfaceInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -231,7 +232,7 @@ export default function AddProperty() {
 									placeholder="Nb de chambres" 
 									value={bedroomInput} 
 									min={0}
-									onChange={(e) => setBedroomInput(parseInt(e.target.value))}
+									onChange={(e) => setBedroomInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -243,7 +244,7 @@ export default function AddProperty() {
 									placeholder="Nb de chambres" 
 									value={roomInput} 
 									min={0}
-									onChange={(e) => setRoomInput(parseInt(e.target.value))}
+									onChange={(e) => setRoomInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -256,7 +257,7 @@ export default function AddProperty() {
 									placeholder="Sol" 
 									value={floorInput} 
 									min={0}
-									onChange={(e) => setFloorInput(parseInt(e.target.value))}
+									onChange={(e) => setFloorInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -269,7 +270,7 @@ export default function AddProperty() {
 									placeholder="Année de construction"
 									value={constructionInput}
 									min={0}
-									onChange={(e) => setConstructionInput(parseInt(e.target.value))}
+									onChange={(e) => setConstructionInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
