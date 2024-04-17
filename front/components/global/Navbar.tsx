@@ -14,14 +14,24 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
-import { UserButton } from "@clerk/nextjs";
+import { 
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton 
+} from "@clerk/nextjs";
 
 export default function Navbar() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <UserButton />
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton/>
+          </SignedOut>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
