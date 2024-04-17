@@ -1,4 +1,4 @@
-import Dashboard from "@/app/dashboard/dashboard";
+import Dashboard from "@/components/dashboard/Dashboard";
 import { getPropertiesOfUser } from "@/lib/api/properties";
 import { Property } from "@/lib/types/property";
 import { auth } from "@clerk/nextjs";
