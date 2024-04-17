@@ -38,16 +38,21 @@ export default function EstimatePrice({property}: EstimatePriceProps) {
     }
 
     return (
-        loading ?
-        <></> 
-        :
-        estimation === 0 ? 
-            <div>
-                <Button onClick={estimate}>Estimate the price</Button>
-            </div>
-            :
-            <div>
-                <h1>Etimated price: {estimation}€</h1>
-            </div>
+        <div className={`${estimation === 0 ? 'bg-white' : 'bg-green-50'} rounded-md border border-solid border-black/10 p-4 shadow-md flex justify-center`}>
+            {
+                loading ?
+                <></> 
+                :
+                estimation === 0 ? 
+                    <div>
+                        <Button onClick={estimate}>Estimate the price</Button>
+                    </div>
+                    :
+                    <div className="flex flex-col gap-4 justify-center items-center p-8">
+                        <h2 className="italic text-green-700">Estimated price:</h2>
+                        <h1 className="text-4xl font-extrabold text-green-800">{estimation}€</h1>
+                    </div>
+            }
+        </div>
     )
 }
