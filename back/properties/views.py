@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -16,8 +18,9 @@ def property_list(request):
 
     elif request.method == 'POST':
         print("connard")
-        serializer = PropertySerializer(data=request.data)
-        if serializer.is_valid():
+        body = json.loads(request.body.decode("utf-8"))
+        serializer = PropertySerializer(data=body)
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
