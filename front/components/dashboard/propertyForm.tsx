@@ -18,13 +18,19 @@ export default function AddProperty() {
 	const [addressInput, setAddressInput] = useState("");
 	const [cityInput, setCityInput] = useState("");
 	const [regionInput, setRegionInput] = useState("");
-	const [postalInput, setPostalInput] = useState("");
+	const [postalInput, setPostalInput] = useState(0);
 	const [propertyType, setPropertyType] = useState<PropertyType>(1);
 
 	const [surfaceInput, setSurfaceInput] = useState(0);
 	const [bedroomInput, setBedroomInput] = useState(0);
 	const [roomInput, setRoomInput] = useState(0);
 	const [floorInput, setFloorInput] = useState(0);
+	const [constructionInput, setConstructionInput] = useState(0);
+
+	const [elevatorInput, setElevatorInput] = useState(false);
+	const [furnishedInput, setFurnishedInput] = useState(false);
+	const [parkingSpaceInput, setParkingSpaceInput] = useState(false);
+	const [gardenInput, setGardenInput] = useState(false);
 
 
 	const [pictureInput, setPictureInput] = useState("");
@@ -32,6 +38,21 @@ export default function AddProperty() {
 	const { userId } = useAuth();
 
 	let submitNewProperty = async () => {
+		console.log('submit')
+		console.log("nameInput:", nameInput);
+		console.log("addressInput:", addressInput);
+		console.log("cityInput:", cityInput);
+		console.log("regionInput:", regionInput);
+		console.log("postalInput:", postalInput);
+		console.log("propertyType:", propertyType);
+		console.log("surfaceInput:", surfaceInput);
+		console.log("bedroomInput:", bedroomInput);
+		console.log("roomInput:", roomInput);
+		console.log("floorInput:", floorInput);
+		console.log("elevatorInput:", elevatorInput);
+		console.log("furnishedInput:", furnishedInput);
+		console.log("pictureInput:", pictureInput);
+
 
 		if (!userId) { // should not happen
 			return;
@@ -42,20 +63,20 @@ export default function AddProperty() {
 			user_id: userId,
 			name: nameInput || 'New Property',
 			adress: addressInput,
-			lat: null,
-			long: null,
+			lat: 0,
+			long: 0,
 			created_at: new Date(),
-			description: "",
+			description: "-",
 			surface: surfaceInput,
 			propertyType: propertyType,
-			hasElevator: false,
-			hasGarden: false,
-			hasParkingSpace: false,
-			isFurnished: false,
-			yearOfConstruction: null,
+			hasElevator: elevatorInput,
+			hasGarden: gardenInput,
+			hasParkingSpace: parkingSpaceInput,
+			isFurnished: furnishedInput,
+			yearOfConstruction: constructionInput,
 			bedroom: bedroomInput,
 			floor: floorInput,
-			cityDepartmentCode: null
+			cityDepartmentCode: postalInput // todo : to edit
 		}
 
 		const newProperty = await addNewProperty(userId as string, property);
@@ -79,27 +100,32 @@ export default function AddProperty() {
 		setAddressInput("");
 		setCityInput("");
 		setRegionInput("");
-		setPostalInput("");
+		setPostalInput(0);
 		setPropertyType(1);
 		setSurfaceInput(0);
 		setBedroomInput(0);
 		setRoomInput(0);
 		setFloorInput(0);
 		setPictureInput("");
+		setElevatorInput(false);
+		setFurnishedInput(false);
+		setParkingSpaceInput(false);
+		setGardenInput(false);
 	}
 
 	return (
 		<Sheet onOpenChange={clearInputs}>
 			<SheetTrigger className="flex justify-start">
-				<Button className="w-36">Add new property</Button>
+				<p className="w-48 font-medium bg-black text-white rounded pt-2.5 pb-2.5 pl-0.5 pr-0.5">Add new property</p>
 			</SheetTrigger>
-			<SheetContent className="w-[400px] sm:w-[1000px]">
+			<SheetContent className="w-[400px] sm:w-[1000px]  overflow-y-scroll">
 				<SheetHeader>
 					<SheetTitle>Add a new property</SheetTitle>
 					<SheetDescription>
 						Fill all the following fields.
 					</SheetDescription>
 				</SheetHeader>
+
 
 				<div className="flex flex-col gap-6 border-b border-gray-900/10 pb-12 scroll">
 					<div className="flex flex-col gap-2">
@@ -175,7 +201,7 @@ export default function AddProperty() {
 									id="postal-code" 
 									placeholder="Code Postal" 
 									value={postalInput}
-									onChange={(e) => setPostalInput(e.target.value)}
+									onChange={(e) => setPostalInput(parseInt(e.target.value))}
 								/>
 							</div>
 
@@ -186,7 +212,7 @@ export default function AddProperty() {
 						<h2 className="mt-2 text-base font-semibold leading-7 text-gray-900">Critères du bien</h2>
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
 							<div className="sm:col-span-3">
-								<label htmlFor="surface" className="block text-sm font-medium leading-6 text-gray-900">Surface (m^2)</label>
+								<label htmlFor="surface" className="block text-sm font-medium leading-6 text-gray-900">Surface (m²)</label>
 								<Input 
 									type="number" 
 									id="surface" 
@@ -223,7 +249,7 @@ export default function AddProperty() {
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor</label>
+								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor (m²)</label>
 								<Input 
 									type="number" 
 									id="floor" 
@@ -235,16 +261,51 @@ export default function AddProperty() {
 							</div>
 
 
-							<div className="flex flex-col gap-2">
+							<div className="sm:col-span-3">
+								<label htmlFor="construction" className="block text-sm font-medium leading-6 text-gray-900">Year or construction</label>
+								<Input
+									type="number"
+									id="construction"
+									placeholder="Année de construction"
+									value={constructionInput}
+									min={0}
+									onChange={(e) => setConstructionInput(parseInt(e.target.value))}
+								/>
+							</div>
+
+
+							<div className="sm:col-span-4 flex flex-col gap-2">
 								<div className="flex items-center gap-1">
-									<Checkbox id="elevator"/>
+									<Checkbox id="elevator"
+											  onCheckedChange={(e) => setElevatorInput(Boolean(e.valueOf))}
+											  checked={elevatorInput}
+									/>
 									<label htmlFor="elevator"
 										className="ml-0.5 text-gray-90 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Ascenceur</label>
 								</div>
 								<div className="flex items-center gap-1">
-									<Checkbox id="furnished"/>
+									<Checkbox id="furnished"
+											  onCheckedChange={(e) => setFurnishedInput(Boolean(e.valueOf))}
+											  checked={furnishedInput}
+									/>
 									<label htmlFor="furnished"
 										className="ml-0.5 text-gray-90 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Meublé</label>
+								</div>
+								<div className="flex items-center gap-1">
+									<Checkbox id="parkingSpace"
+											  onCheckedChange={(e) => setParkingSpaceInput(Boolean(e.valueOf))}
+											  checked={parkingSpaceInput}
+									/>
+									<label htmlFor="parkingSpace"
+										className="ml-0.5 text-gray-90 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Parking</label>
+								</div>
+								<div className="flex items-center gap-1">
+									<Checkbox id="garden"
+											  onCheckedChange={(e) => setGardenInput(Boolean(e.valueOf))}
+											  checked={gardenInput}
+									/>
+									<label htmlFor="garden"
+										className="ml-0.5 text-gray-90 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Jardin</label>
 								</div>
 							</div>
 						</div>
