@@ -2,7 +2,7 @@ import Dashboard from "@/components/dashboard/Dashboard";
 import { getPropertiesOfUser } from "@/lib/api/properties";
 import { Property } from "@/lib/types/property";
 import { auth } from "@clerk/nextjs";
-import AddProperty from "@/components/dashboard/propertyForm";
+import AddProperty from "@/components/dashboard/PropertyForm";
 
 export default async function Home() {
 
