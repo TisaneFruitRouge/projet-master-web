@@ -17,6 +17,10 @@ export async function addNewProperty(userId: string, property: Property) {
     const response = await fetch(`${URL}/api/properties/`,
         {
             method: "POST",
+            headers: {
+                'Content-Type' : 'application/json',
+                'Accept' : 'application/json'
+            },
             body: JSON.stringify({
                 user_id: userId,
                 name: property.name,
@@ -31,9 +35,11 @@ export async function addNewProperty(userId: string, property: Property) {
                 hasParkingSpace: property.hasParkingSpace,
                 yearOfConstruction: property.yearOfConstruction,
                 bedroom: property.bedroom,
+                room: property.room,
                 floor: property.floor,
                 isFurnished: property.isFurnished,
-                cityDepartmentCode: property.cityDepartmentCode
+                cityDepartmentCode: property.cityDepartmentCode,
+                image: property.image
             })
         }
     )
@@ -50,6 +56,14 @@ export async function getProperty(id: string) {
 
     const response = await fetch(`${URL}/api/properties/${id}/`);
     const data:Property | null = await response.json();
+
+    return data ?? null;
+}
+export async function getImage(imageUrl: string) {
+    const URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+    const response = await fetch(`${URL}${imageUrl}`);
+    const data = await response.json();
 
     return data ?? null;
 }

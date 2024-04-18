@@ -17,7 +17,9 @@ export type Property = {
     hasParkingSpace: boolean;
     yearOfConstruction: number | null;
     bedroom: number;
+    room: number;
     floor: number;
     isFurnished : boolean;
     cityDepartmentCode: number | null;
-}   
+    image: string | null;
+}

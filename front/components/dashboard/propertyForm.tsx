@@ -34,8 +34,20 @@ export default function AddProperty() {
 
 
 	const [pictureInput, setPictureInput] = useState("");
+	const [fileInput, setFileInput] = useState<File>();
 
 	const { userId } = useAuth();
+
+	let fileContent: string | ArrayBuffer | null | undefined = "";
+
+	let registerFile = (target: EventTarget & HTMLInputElement) => {
+		if (target) {
+			if (target.files !== null && target.files[0]) {
+				setFileInput(target.files[0]);
+			}
+			setPictureInput(target.value);
+		}
+	}
 
 	let submitNewProperty = async () => {
 		console.log('submit')
@@ -52,11 +64,36 @@ export default function AddProperty() {
 		console.log("elevatorInput:", elevatorInput);
 		console.log("furnishedInput:", furnishedInput);
 		console.log("pictureInput:", pictureInput);
+		console.log("fileInput:", fileInput);
+		console.log("fileContentInput", fileContent);
 
 
 		if (!userId) { // should not happen
 			return;
 		}
+
+		if (fileInput) {
+			let fileReader = new FileReader();
+			fileReader.onload = async (event) => {
+				let content = event.target?.result;
+				if (content instanceof ArrayBuffer) {
+					// todo : to edit with good way
+					content = content.toString();
+				}
+				fileContent = content;
+				console.log("called with file");
+				await addProperty();
+			}
+			fileReader.readAsDataURL(fileInput);
+		}else {
+			console.log("called without file")
+			await addProperty();
+		}
+
+
+	}
+
+	let addProperty = async () => {
 
 		const property:Property = {
 			id: '', // id will be given by the backend
@@ -75,9 +112,15 @@ export default function AddProperty() {
 			isFurnished: furnishedInput,
 			yearOfConstruction: constructionInput,
 			bedroom: bedroomInput,
+			room: roomInput,
 			floor: floorInput,
 			cityDepartmentCode: postalInput // todo : to edit
 		}
+
+		if (fileContent) {
+			property.image = fileContent.toString();
+		}
+
 
 		const newProperty = await addNewProperty(userId as string, property);
 		console.log(newProperty)
@@ -92,7 +135,6 @@ export default function AddProperty() {
 
 			clearInputs();
 		}
-
 	}
 
 	const clearInputs = () => {
@@ -107,6 +149,7 @@ export default function AddProperty() {
 		setRoomInput(0);
 		setFloorInput(0);
 		setPictureInput("");
+		setFileInput(undefined);
 		setElevatorInput(false);
 		setFurnishedInput(false);
 		setParkingSpaceInput(false);
@@ -318,8 +361,8 @@ export default function AddProperty() {
 							type="file" 
 							id="pictures" 
 							placeholder="Files" 
-							value={pictureInput} 
-							onChange={(e) => setPictureInput(e.target.value)}
+							value={pictureInput}
+							onChange={(e) => registerFile((e.target))}
 						/>
 					</div>
 
