@@ -1,3 +1,5 @@
+[![Build Status](https://github-drone.regnault.dev/api/badges/TisaneFruitRouge/projet-master-web/status.svg)](https://github-drone.regnault.dev/TisaneFruitRouge/projet-master-web)
+
 # API REST Django
 
 ## Mise en place de l'environnement

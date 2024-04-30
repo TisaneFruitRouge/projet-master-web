@@ -1,5 +1,3 @@
-[![Build Status](https://github-drone.regnault.dev/api/badges/TisaneFruitRouge/projet-master-web/status.svg)](https://github-drone.regnault.dev/TisaneFruitRouge/projet-master-web)
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
