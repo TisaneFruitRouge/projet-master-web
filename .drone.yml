@@ -2,16 +2,17 @@ kind: pipeline
 name: build
 type: docker
 
-- name: build backend
-    image: plugins/docker
-    settings:
-      registry: r.regnault.dev
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: r.regnault.dev/estim-ai-back
-      dockerfile: back/Dockerfile
+steps:
+  - name: build backend
+      image: plugins/docker
+      settings:
+        registry: r.regnault.dev
+        username:
+          from_secret: DOCKER_USERNAME
+        password:
+          from_secret: DOCKER_PASSWORD
+        repo: r.regnault.dev/estim-ai-back
+        dockerfile: back/Dockerfile
 
 trigger:
   branch:
