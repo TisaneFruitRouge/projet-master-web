@@ -12,3 +12,7 @@ type: docker
         from_secret: DOCKER_PASSWORD
       repo: r.regnault.dev/estim-ai-back
       dockerfile: back/Dockerfile
+
+trigger:
+  branch:
+  - master
