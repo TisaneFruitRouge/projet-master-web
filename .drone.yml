@@ -24,7 +24,7 @@ steps:
     image: r.regnault.dev/drone-vercel-deploy
     settings:
       log_level: debug
-      vercel_env: production
+      vercel_environment: production
       vercel_token:
         from_secret: VERCEL_TOKEN
       vercel_org_id:
