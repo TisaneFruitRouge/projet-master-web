@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-yv3#+oux#=wmfjo#_b4iyjgk5w6c&r(xqf^&!x08%*=(89%$@q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ['API_HOST']]
+ALLOWED_HOSTS = []
 
 CORS_ORIGIN_ALLOW_ALL = True
 
 CSRF_TRUSTED_ORIGINS = []
-if os.environ['API_HOST']:
+if 'API_HOST' in os.environ.keys():
+    ALLOWED_HOSTS.append(os.environ['API_HOST'])
     CSRF_TRUSTED_ORIGINS.append(os.environ['API_HOST'] if os.environ['API_HOST'].startswith("http") else f"https://{os.environ['API_HOST']}")
 
 # Application definition
