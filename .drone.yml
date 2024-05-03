@@ -72,6 +72,14 @@ steps:
       script:
         - ./deploy.sh estimai
 
+  - name: send discord notification
+    image: r.regnault.dev/drone-discord-webhook
+    environment:
+      WEBHOOK_URL:
+        from_secret: WEBHOOK_URL
+    when:
+      status: [ success, failure, changed ]
+
 trigger:
   branch:
   - master
