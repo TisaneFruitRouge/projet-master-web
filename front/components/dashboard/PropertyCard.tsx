@@ -21,7 +21,7 @@ export default async function PropertyCard({property}: PropertyCardProps) {
 			<div className="flex flex-col gap-2 w-64 bg-slate-100 rounded-xl hover:-translate-y-1 duration-300 shadow-md border border-black border-solid">
 				<AspectRatio ratio={16 / 12}>
 					<Image
-						className="w-full img-responsive h-auto mx-auto rounded-t-xl"
+						className="w-full h-full img-responsive object-cover mx-auto rounded-t-xl"
 						src={image}
 						priority={true}
 						alt="Property"
