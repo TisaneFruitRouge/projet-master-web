@@ -8,7 +8,8 @@ export async function getEstimation(request: EstimationRequest) {
         {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(request)
         }

@@ -17,6 +17,10 @@ export async function addNewProperty(userId: string, property: Property) {
     const response = await fetch(`${URL}/api/properties/`,
         {
             method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 user_id: userId,
                 name: property.name,
