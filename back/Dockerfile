@@ -1,6 +1,4 @@
-FROM python:alpine
-
-RUN apk add --no-cache build-base
+FROM python:slim-bullseye
 
 ARG DJANGO_SUPERUSER_USERNAME
 ENV DJANGO_SUPERUSER_USERNAME=$DJANGO_SUPERUSER_USERNAME
@@ -18,6 +16,6 @@ COPY . /app
 WORKDIR /app
 
 RUN chmod +x startup.sh
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 ENTRYPOINT [ "./startup.sh" ]
