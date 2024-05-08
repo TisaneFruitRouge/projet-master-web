@@ -11,8 +11,17 @@ export type EstimationRequest = {
 	room: number,
 	propertyType: PropertyType;
 	cityDepartmentCode: number;
+	property_id: string;
 }
 
 export type EstimationResponse = {
     estimated_price: number;
+}
+
+export type Estimation = {
+	id: string;
+    type: string;
+    price: number;
+    dateOfEstimation: string;
+    property_id: string;
 }
