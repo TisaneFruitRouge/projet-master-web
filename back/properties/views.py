@@ -21,3 +21,17 @@ def property_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def property(request, id):
+    """
+    Returns a single property by ID.
+    """
+    if request.method == 'GET':
+        try:
+            property = Property.objects.get(pk=id)
+            serializer = PropertySerializer(property)
+            return Response(serializer.data)
+        except Property.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+

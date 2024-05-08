@@ -1,6 +1,7 @@
 from django.urls import path
-from prediction.views import snippet_list
+from prediction.views import prediction, get_prediction
 
 urlpatterns = [
-    path('predictions/', snippet_list, name='snippet-list'),
+    path('', prediction, name='prediction'),
+    path('<str:property_id>/', get_prediction, name='get_prediction')
 ]

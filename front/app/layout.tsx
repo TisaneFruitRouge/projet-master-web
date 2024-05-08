@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/global/Navbar";
+import { Toaster } from "@/components/ui/sonner"
 
 import { ClerkProvider } from '@clerk/nextjs'
 
@@ -21,9 +22,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className + " min-h-screen"}>
+        <body className={`${inter.className} min-h-screen`}>
           <Navbar />
           {children}
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
