@@ -1,5 +1,13 @@
 import * as React from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 const cityNames = [
     "bordeaux",
@@ -14,15 +22,7 @@ const cityNames = [
     "toulouse",
 ];
 
-interface SelectScrollableProps {
-    setSelectedCity: (city: string) => void;
-}
-
-export const SelectScrollable: React.FC<SelectScrollableProps> = ({ setSelectedCity }) => {
-    const handleCityChange = (city: string) => {
-        setSelectedCity(city);
-    };
-
+export function SelectScrollable() {
     return (
         <Select>
             <SelectTrigger className="w-[280px]">
@@ -31,8 +31,9 @@ export const SelectScrollable: React.FC<SelectScrollableProps> = ({ setSelectedC
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Cities</SelectLabel>
+                    {/* Render SelectItems for each city */}
                     {cityNames.map(cityName => (
-                        <SelectItem key={cityName} value={cityName} onClick={() => handleCityChange(cityName)}>
+                        <SelectItem key={cityName} value={cityName}>
                             {cityName}
                         </SelectItem>
                     ))}
@@ -40,4 +41,4 @@ export const SelectScrollable: React.FC<SelectScrollableProps> = ({ setSelectedC
             </SelectContent>
         </Select>
     );
-};
+}
