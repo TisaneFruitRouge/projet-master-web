@@ -21,5 +21,5 @@ export type Property = {
     floor: number;
     isFurnished : boolean;
     cityDepartmentCode: number | null;
-    image: string | null;
+    image?: string | null;
 }

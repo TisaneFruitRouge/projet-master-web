@@ -80,7 +80,7 @@ export default function AddProperty() {
 
 		const property:Property = {
 			id: '', // id will be given by the backend
-			user_id: userId,
+			user_id: userId ?? '',
 			name: nameInput || 'New Property',
 			adress: addressInput,
 			lat: 0,
