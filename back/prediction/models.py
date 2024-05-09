@@ -24,3 +24,7 @@ class PredictionRequest(models.Model):
     room = models.IntegerField()
     propertyType = models.IntegerField()
     cityDepartmentCode = models.IntegerField()
+    property_id = models.ForeignKey(
+        "properties.Property",
+        on_delete=models.CASCADE,
+    )

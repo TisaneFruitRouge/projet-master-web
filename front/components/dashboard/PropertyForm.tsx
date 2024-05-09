@@ -50,23 +50,6 @@ export default function AddProperty() {
 	}
 
 	let submitNewProperty = async () => {
-		console.log('submit')
-		console.log("nameInput:", nameInput);
-		console.log("addressInput:", addressInput);
-		console.log("cityInput:", cityInput);
-		console.log("regionInput:", regionInput);
-		console.log("postalInput:", postalInput);
-		console.log("propertyType:", propertyType);
-		console.log("surfaceInput:", surfaceInput);
-		console.log("bedroomInput:", bedroomInput);
-		console.log("roomInput:", roomInput);
-		console.log("floorInput:", floorInput);
-		console.log("elevatorInput:", elevatorInput);
-		console.log("furnishedInput:", furnishedInput);
-		console.log("pictureInput:", pictureInput);
-		console.log("fileInput:", fileInput);
-		console.log("fileContentInput", fileContent);
-
 
 		if (!userId) { // should not happen
 			return;
@@ -114,7 +97,7 @@ export default function AddProperty() {
 			bedroom: bedroomInput,
 			room: roomInput,
 			floor: floorInput,
-			cityDepartmentCode: postalInput // todo : to edit
+			cityDepartmentCode: postalInput // todo : to edit	
 		}
 
 		if (fileContent) {
@@ -123,7 +106,7 @@ export default function AddProperty() {
 
 
 		const newProperty = await addNewProperty(userId as string, property);
-		console.log(newProperty)
+
 		if (newProperty === null) {
 			toast("Error while adding the property", {
 				description: "We couldn't successfully add the new property to your dashboard"

@@ -18,8 +18,8 @@ export async function addNewProperty(userId: string, property: Property) {
         {
             method: "POST",
             headers: {
-                'Content-Type' : 'application/json',
-                'Accept' : 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 user_id: userId,
