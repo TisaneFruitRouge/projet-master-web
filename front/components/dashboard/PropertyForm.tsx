@@ -34,14 +34,49 @@ export default function AddProperty() {
 
 
 	const [pictureInput, setPictureInput] = useState("");
+	const [fileInput, setFileInput] = useState<File>();
 
 	const { userId } = useAuth();
+
+	let fileContent: string | ArrayBuffer | null | undefined = "";
+
+	let registerFile = (target: EventTarget & HTMLInputElement) => {
+		if (target) {
+			if (target.files !== null && target.files[0]) {
+				setFileInput(target.files[0]);
+			}
+			setPictureInput(target.value);
+		}
+	}
 
 	let submitNewProperty = async () => {
 
 		if (!userId) { // should not happen
 			return;
 		}
+
+		if (fileInput) {
+			let fileReader = new FileReader();
+			fileReader.onload = async (event) => {
+				let content = event.target?.result;
+				if (content instanceof ArrayBuffer) {
+					// todo : to edit with good way
+					content = content.toString();
+				}
+				fileContent = content;
+				console.log("called with file");
+				await addProperty();
+			}
+			fileReader.readAsDataURL(fileInput);
+		}else {
+			console.log("called without file")
+			await addProperty();
+		}
+
+
+	}
+
+	let addProperty = async () => {
 
 		const property:Property = {
 			id: '', // id will be given by the backend
@@ -60,9 +95,15 @@ export default function AddProperty() {
 			isFurnished: furnishedInput,
 			yearOfConstruction: constructionInput,
 			bedroom: bedroomInput,
+			room: roomInput,
 			floor: floorInput,
 			cityDepartmentCode: postalInput // todo : to edit	
 		}
+
+		if (fileContent) {
+			property.image = fileContent.toString();
+		}
+
 
 		const newProperty = await addNewProperty(userId as string, property);
 
@@ -91,6 +132,7 @@ export default function AddProperty() {
 		setRoomInput(0);
 		setFloorInput(0);
 		setPictureInput("");
+		setFileInput(undefined);
 		setElevatorInput(false);
 		setFurnishedInput(false);
 		setParkingSpaceInput(false);
@@ -180,12 +222,13 @@ export default function AddProperty() {
 
 							<div className="sm:col-span-3">
 								<label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">Postal Code</label>
-								<Input 
+								<Input
+									type="number"
 									autoComplete="postal-code" 
 									id="postal-code" 
 									placeholder="Code Postal" 
 									value={postalInput}
-									onChange={(e) => setPostalInput(parseInt(e.target.value))}
+									onChange={(e) => setPostalInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -198,12 +241,12 @@ export default function AddProperty() {
 							<div className="sm:col-span-3">
 								<label htmlFor="surface" className="block text-sm font-medium leading-6 text-gray-900">Surface (m²)</label>
 								<Input 
-									type="number" 
+									type="number"
 									id="surface" 
 									placeholder="Surface" 
 									value={surfaceInput} 
 									min={0}
-									onChange={(e) => setSurfaceInput(parseInt(e.target.value))}
+									onChange={(e) => setSurfaceInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -215,7 +258,7 @@ export default function AddProperty() {
 									placeholder="Nb de chambres" 
 									value={bedroomInput} 
 									min={0}
-									onChange={(e) => setBedroomInput(parseInt(e.target.value))}
+									onChange={(e) => setBedroomInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -227,7 +270,7 @@ export default function AddProperty() {
 									placeholder="Nb de chambres" 
 									value={roomInput} 
 									min={0}
-									onChange={(e) => setRoomInput(parseInt(e.target.value))}
+									onChange={(e) => setRoomInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -240,7 +283,7 @@ export default function AddProperty() {
 									placeholder="Sol" 
 									value={floorInput} 
 									min={0}
-									onChange={(e) => setFloorInput(parseInt(e.target.value))}
+									onChange={(e) => setFloorInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -253,7 +296,7 @@ export default function AddProperty() {
 									placeholder="Année de construction"
 									value={constructionInput}
 									min={0}
-									onChange={(e) => setConstructionInput(parseInt(e.target.value))}
+									onChange={(e) => setConstructionInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -301,8 +344,8 @@ export default function AddProperty() {
 							type="file" 
 							id="pictures" 
 							placeholder="Files" 
-							value={pictureInput} 
-							onChange={(e) => setPictureInput(e.target.value)}
+							value={pictureInput}
+							onChange={(e) => registerFile((e.target))}
 						/>
 					</div>
 
