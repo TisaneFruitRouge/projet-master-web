@@ -1,7 +1,6 @@
 import MapComponent from "./MapComponent"
 import { Payment, columns } from "./columns"
 import { DataTable } from "./data-table"
-import {SelectScrollable} from "@/app/statistics/global/SelectScrollable";
 
 async function getData(): Promise<Payment[]> {
     // Fetch data from your API here.
@@ -24,14 +23,7 @@ export default async function GlobalStats() {
             <div className="w-1/2">
                 <DataTable columns={columns} data={data}/>
             </div>
-            <div className="w-1/2 flex flex-col">
-                <div className="w-full">
-                    <SelectScrollable></SelectScrollable>
-                </div>
-                <div className="w-full">
-                    <iframe src="/bordeaux_plot.html" width="100%" height="400"></iframe>
-                </div>
-            </div>
+            <MapComponent />
         </div>
     );
 }

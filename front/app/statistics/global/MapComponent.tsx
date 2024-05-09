@@ -1,28 +1,25 @@
 "use client";
-import React, { useEffect } from 'react';
-import mapboxgl from 'mapbox-gl';
+
+import { useState } from 'react';
+import SelectCity from "@/app/statistics/global/SelectCity";
+import { ECityNames } from '@/lib/types/city';
 
 function MapComponent() {
-    useEffect(() => {
-        // Initialize Mapbox map
-        mapboxgl.accessToken = 't';
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11', // Choose a Mapbox style
-            center: [-74.006, 40.7128], // New York City coordinates
-            zoom: 10 // Initial zoom level
-        });
-
-        // Add any additional customization or layers to the map if needed
-
-        return () => {
-            // Cleanup function
-            map.remove();
-        };
-    }, []); // Empty dependency array ensures the effect runs only once
+    
+    const [selectedCity, setSelectedCity] = useState<ECityNames>(ECityNames.STRASBOURG);
 
     return (
-        <div id="map" style={{ width: '100%', height: '400px' }}></div> // Div container for the map
+        <div className="w-1/2 flex flex-col">
+            <div className="w-full">
+                <SelectCity 
+                    selectedCity={selectedCity} 
+                    setSelectedCity={setSelectedCity}
+                />
+            </div>
+            <div className="w-full">
+                <iframe src={`/${selectedCity}_plot.html`} width="100%" height="400"></iframe>
+            </div>
+        </div>
     );
 }
 

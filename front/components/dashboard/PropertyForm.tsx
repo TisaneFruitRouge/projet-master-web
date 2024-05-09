@@ -1,11 +1,11 @@
 "use client"
 
-import {useState} from "react";
-import {Input} from "@/components/ui/input";
-import {Checkbox} from "@/components/ui/checkbox";
-import {Button} from "@/components/ui/button";
-import {Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
-import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Property, PropertyType } from "@/lib/types/property";
 import { addNewProperty } from "@/lib/api/properties";
 import { useAuth } from "@clerk/nextjs";
@@ -74,8 +74,8 @@ export default function AddProperty() {
 			toast("New property added successfully", {
 				description: "The property was added to your dashboard"
 			});
-
 			clearInputs();
+			window.location.reload()
 		}
 	}
 

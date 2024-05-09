@@ -33,6 +33,7 @@ export default function EstimatePrice({property}: EstimatePriceProps) {
             property_id: property.id
         })
         setEstimation(estimation ?? 0)
+        setDateOfEstimation((new Date()).toISOString().split('T')[0])
         setLoading(false)
     }
 
