@@ -10,7 +10,13 @@ def property_list(request):
     List all properties, or create a new property.
     """
     if request.method == 'GET':
-        properties = Property.objects.all()
+        is_sold = request.query_params.get('is_sold')
+        if is_sold is None:
+            properties = Property.objects.all()
+        elif is_sold == 'true':
+            properties = Property.objects.filter(is_sold=True).all()
+        else:
+            properties = Property.objects.filter(is_sold=False).all()
         serializer = PropertySerializer(properties, many=True)
         return Response(serializer.data)
 
