@@ -60,15 +60,10 @@ export async function getProperty(id: string) {
     return data ?? null;
 }
 
-export async function getProperties(isSold?: boolean | null) {
+export async function getProperties() {
     const URL = process.env.NEXT_PUBLIC_API_URL as string;
 
-    let f = '';
-    if (isSold !== undefined && isSold !== null) {
-        f = `?is_sold=${isSold}`;
-    }
-
-    const response = await fetch(`${URL}/api/properties/${f}`);
+    const response = await fetch(`${URL}/api/properties`);
     const data = await response.json();
 
     return data ?? [];
