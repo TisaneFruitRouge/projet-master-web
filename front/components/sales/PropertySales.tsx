@@ -35,10 +35,10 @@ export default function SalesSelector({properties}:SalesSelectorProps) {
 					onValueChange={(value) => setIsSoldInput(value)}
 				>
 					<SelectTrigger className="w-[180px]">
-						<SelectValue placeholder="Tous/Vendus/En-Vente" />
+						<SelectValue placeholder="Tous les biens" defaultValue="all" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all">Tous</SelectItem>
+						<SelectItem value="all">Tous les biens</SelectItem>
 						<SelectItem value="sold">Vendu</SelectItem>
 						<SelectItem value="on-sale">En vente</SelectItem>
 					</SelectContent>
