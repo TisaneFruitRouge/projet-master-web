@@ -279,7 +279,7 @@ export default function AddProperty() {
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor (m²)</label>
+								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor</label>
 								<Input 
 									type="number" 
 									id="floor" 
