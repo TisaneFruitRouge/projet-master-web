@@ -3,9 +3,11 @@ import { getProperty } from "@/lib/api/properties";
 import { Property } from "@/lib/types/property";
 import Image from "next/image";
 import NoImage from "@/lib/assets/noimage.jpg"
+import {auth} from "@clerk/nextjs";
+import PutOnSale from "@/components/property/PutOnSale";
 
 export default async function PropertyPage({ params }: { params: { id: string } }) {
-    
+    const { userId } = auth();
     const {id} = params;
 
     const property = await getProperty(id) as Property;
@@ -30,6 +32,7 @@ export default async function PropertyPage({ params }: { params: { id: string } 
                     </div>
                 </div>
             </div>
+            <PutOnSale property={property}/>
             <EstimatePrice property={property}/>
         </main> 
     )

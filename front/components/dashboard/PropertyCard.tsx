@@ -1,3 +1,5 @@
+"use client"
+
 import { Property } from "@/lib/types/property";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
@@ -6,16 +8,25 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import NoImage from "@/lib/assets/noimage.jpg"
 import Image from "next/image";
 import {getImage} from "@/lib/api/properties";
+import { useEffect, useState } from "react";
 
 interface PropertyCardProps {
     property: Property
 }
 
-export default async function PropertyCard({property}: PropertyCardProps) {
-	let image = NoImage;
-	if (property.image) {
-		image = await getImage(property.image);
-	}
+export default function PropertyCard({property}: PropertyCardProps) {
+	
+	const [image, setImage] = useState(NoImage);
+
+	useEffect(() => {
+		(async () => {
+			if (property.image) {
+				const img = await getImage(property.image);
+				setImage(img);
+			}
+		})();
+	})
+
     return (
         <Link key={property.id} href={`/property/${property.id}`}>
 			<div className="flex flex-col gap-2 w-64 bg-slate-100 rounded-xl hover:-translate-y-1 duration-300 shadow-md border border-black border-solid">

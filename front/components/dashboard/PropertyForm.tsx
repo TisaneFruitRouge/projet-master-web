@@ -97,7 +97,10 @@ export default function AddProperty() {
 			bedroom: bedroomInput,
 			room: roomInput,
 			floor: floorInput,
-			cityDepartmentCode: postalInput // todo : to edit	
+			cityDepartmentCode: postalInput, // todo : to edit	
+			is_sold: null,
+			sold_price: null,
+			sold_date: null
 		}
 
 		if (fileContent) {
