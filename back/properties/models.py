@@ -29,7 +29,7 @@ class Property(models.Model):
     floor = models.IntegerField()
     isFurnished = models.BooleanField(default=False)
     cityDepartmentCode = models.IntegerField(null=True)
-    image = models.ImageField(upload_to=user_directory_path, null=True)
+    image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     is_sold = models.BooleanField(null=True)
     sold_price = models.FloatField(null=True)
     sold_date = models.DateTimeField(null=True)

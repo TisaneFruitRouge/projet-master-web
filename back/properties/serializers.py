@@ -4,9 +4,9 @@ from drf_extra_fields.fields import Base64ImageField
 
 
 class PropertySerializer(serializers.ModelSerializer):
-    image = Base64ImageField(required=False)
+    image = Base64ImageField(required=False, allow_null=True)
     class Meta:
         model = Property
         fields = ['id', 'user_id', 'name', 'adress', 'lat', 'long', 'created_at', 'description', 'surface',
         'propertyType', 'hasElevator', 'hasGarden', 'hasParkingSpace', 'yearOfConstruction', 'bedroom', 'room', 'floor',
-        'isFurnished', 'cityDepartmentCode', 'image']
+        'isFurnished', 'cityDepartmentCode', 'image', 'is_sold', 'sold_price', 'sold_date']

@@ -44,12 +44,12 @@ export default function SalesSelector({properties}:SalesSelectorProps) {
 					</SelectContent>
 				</Select>
 			</div>
-			<div className="flex justify-start flex-wrap gap-8">
+			<div>
 			{
 				selectedProperties.length === 0 ?
 					<div className="italic">There is 0 property to display...</div>
 						:
-					<div>
+					<div className="flex justify-start flex-wrap gap-8">
 						{selectedProperties.map((property => <PropertyCard key={property.id} property={property}/>))}
 					</div>
 			}
