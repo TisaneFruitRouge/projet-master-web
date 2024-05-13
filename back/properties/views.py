@@ -49,6 +49,7 @@ def property(request, id):
                 return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
             else:
                 print(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Property.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
