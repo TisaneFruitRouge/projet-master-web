@@ -21,6 +21,7 @@ export default function PutOnSale({property}: PutOnSaleProps) {
 	const [isPriceValidated, setPriceValidationInput] = useState<boolean>(property.is_sold !== null);
 	const putOnSale = async () => {
 
+		console.log(property);
 		if (priceInput > 0) {
 			property.is_sold = false;
 			property.sold_price = priceInput;
