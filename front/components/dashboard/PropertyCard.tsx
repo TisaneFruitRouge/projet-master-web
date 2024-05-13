@@ -46,7 +46,7 @@ export default function PropertyCard({property}: PropertyCardProps) {
 					</div>
 					<p className="location">Strasbourg</p>
 					<div className="flex justify-between text-xs gap-2 ">
-						<Badge>{property.floor} m²</Badge>
+						<Badge>{property.surface} m²</Badge>
 						<Badge>{property.room} pièces</Badge>
 						<Badge>{property.bedroom} chambres</Badge>
 					</div>
