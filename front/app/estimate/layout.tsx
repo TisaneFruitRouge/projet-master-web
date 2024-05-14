@@ -1,5 +1,5 @@
 import { EstimateNav } from "@/components/estimate/EstimateNav";
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
 
 export default function EstimateLayout({
     children,
