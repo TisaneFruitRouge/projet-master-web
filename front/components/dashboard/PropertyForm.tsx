@@ -9,16 +9,20 @@ import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigg
 import { Property, PropertyType } from "@/lib/types/property";
 import { addNewProperty } from "@/lib/api/properties";
 import { useAuth } from "@clerk/nextjs";
+import { json } from "stream/consumers";
 
 import { toast } from "sonner"
+import { Value } from "@radix-ui/react-select";
 
 export default function AddProperty() {
 
 	const [nameInput, setNameInput] = useState("");
+	
 	const [addressInput, setAddressInput] = useState("");
-	const [cityInput, setCityInput] = useState("");
-	const [regionInput, setRegionInput] = useState("");
 	const [postalInput, setPostalInput] = useState(0);
+	const [latInput, setLatInput] = useState(0);
+	const [lonInput, setLonInput] = useState(0);
+
 	const [propertyType, setPropertyType] = useState<PropertyType>(1);
 
 	const [surfaceInput, setSurfaceInput] = useState(0);
@@ -38,6 +42,8 @@ export default function AddProperty() {
 
 	const { userId } = useAuth();
 
+	const [results, setApiGps] = useState();
+
 	let fileContent: string | ArrayBuffer | null | undefined = "";
 
 	let registerFile = (target: EventTarget & HTMLInputElement) => {
@@ -47,6 +53,36 @@ export default function AddProperty() {
 			}
 			setPictureInput(target.value);
 		}
+	}
+
+	let apiAdresse = async (query: string) => {
+		if(query.length>6){
+			try {
+				const adresse = query.replace(" ", "+");
+				const api_endpoint = "https://api-adresse.data.gouv.fr/search";
+				const api_params = { "q": adresse };
+				const response = await fetch(`${api_endpoint}?${new URLSearchParams(api_params)}`);
+				const data = await response.json();
+				if (response.status === 200) {
+					setApiGps(data.features);
+				} else {
+					console.log(`La requête a échoué avec le code de statut: ${response.status}`);
+				}
+			} catch (error) {
+				console.log(`Une erreur s'est produite lors de l'appel de l'API: ${error}`);
+			}
+		}
+		else{
+			setApiGps(undefined);
+		}
+	};
+
+	let loadAddress = (data: any) => {
+		setAddressInput(data.properties.label);
+		setPostalInput(data.properties.citycode);
+		setLatInput(data.geometry.coordinates[0]);
+		setLonInput(data.geometry.coordinates[1]);
+		setApiGps(undefined);
 	}
 
 	let submitNewProperty = async () => {
@@ -83,8 +119,8 @@ export default function AddProperty() {
 			user_id: userId ?? '',
 			name: nameInput || 'New Property',
 			adress: addressInput,
-			lat: 0,
-			long: 0,
+			lat: latInput,
+			long: lonInput,
 			created_at: new Date(),
 			description: "-",
 			surface: surfaceInput,
@@ -124,10 +160,9 @@ export default function AddProperty() {
 	}
 
 	const clearInputs = () => {
+		setApiGps(undefined);
 		setNameInput("");
 		setAddressInput("");
-		setCityInput("");
-		setRegionInput("");
 		setPostalInput(0);
 		setPropertyType(1);
 		setSurfaceInput(0);
@@ -189,51 +224,29 @@ export default function AddProperty() {
 
 					<div className="flex flex-col gap-2">
 						<h2 className="mt-2 text-base font-semibold leading-7 text-gray-900">Localisation</h2>
-						<div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
-							<div className="sm:col-span-3">
-								<label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">Address</label>
-								<Input 
-									autoComplete="street-address" 
-									id="street-address" 
-									placeholder="Address" 
-									value={addressInput}
-									onChange={(e) => setAddressInput(e.target.value)}
-								/>
-							</div>
+						<div className="gap-4">
+
 
 							<div className="sm:col-span-3">
-								<label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">City</label>
+								<label htmlFor="adresse" className="block text-sm font-medium leading-6 text-gray-900">Adresse</label>
 								<Input 
 									autoComplete="address-level2" 
-									id="city" 
-									placeholder="Ville" 
-									value={cityInput}
-									onChange={(e) => setCityInput(e.target.value)}
+									id="adresse" 
+									placeholder="Adresse" 
+									value={addressInput}
+									onChange={(e) => {setAddressInput(e.target.value);apiAdresse(e.target.value);}}
 								/>
+								{results && (
+									<div className="p-1 absolute mt-2 mr-5 rounded-lg shadow-lg border-2 border-black/10 bg-white" >
+										{results && results.map((result, index) => (
+											<button className="hover:bg-gray-100 rounded-lg p-1 my-1 w-full text-wrap" key={index} onClick={(e) => loadAddress(result)}>
+												{result.properties.label}
+											</button>
+										))}
+									</div>
+								)}
 							</div>
 
-							<div className="sm:col-span-3">
-								<label htmlFor="region" className="block text-sm font-medium leading-6 text-gray-900">Region/State/Province</label>
-								<Input 
-									autoComplete="address-level1" 
-									id="region" 
-									placeholder="Région" 
-									value={regionInput}
-									onChange={(e) => setRegionInput(e.target.value)}
-								/>
-							</div>
-
-							<div className="sm:col-span-3">
-								<label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">Postal Code</label>
-								<Input
-									type="number"
-									autoComplete="postal-code" 
-									id="postal-code" 
-									placeholder="Code Postal" 
-									value={postalInput}
-									onChange={(e) => setPostalInput(parseInt(e.target.value) || 0)}
-								/>
-							</div>
 
 						</div>
 					</div>
