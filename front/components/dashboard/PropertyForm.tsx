@@ -372,7 +372,6 @@ export default function AddProperty() {
 					</div>
 
 				</div>
-
 			</SheetContent>
 		</Sheet>
 	)
