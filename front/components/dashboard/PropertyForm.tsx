@@ -9,10 +9,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Property, PropertyType } from "@/lib/types/property";
 import { addNewProperty } from "@/lib/api/properties";
 import { useAuth } from "@clerk/nextjs";
-import { json } from "stream/consumers";
 
 import { toast } from "sonner"
-import { Value } from "@radix-ui/react-select";
+import { AutocompleteResponse, Address } from "@/lib/types/autocomplete";
 
 export default function AddProperty() {
 
@@ -42,11 +41,11 @@ export default function AddProperty() {
 
 	const { userId } = useAuth();
 
-	const [results, setApiGps] = useState();
+	const [autocompleteResults, setAutocompleteResults] = useState<any[]>([]);
 
 	let fileContent: string | ArrayBuffer | null | undefined = "";
 
-	let registerFile = (target: EventTarget & HTMLInputElement) => {
+	const registerFile = (target: EventTarget & HTMLInputElement) => {
 		if (target) {
 			if (target.files !== null && target.files[0]) {
 				setFileInput(target.files[0]);
@@ -55,16 +54,16 @@ export default function AddProperty() {
 		}
 	}
 
-	let apiAdresse = async (query: string) => {
-		if(query.length>6){
+	const getAdressAutocomplete = async (query: string) => {
+		if(query.length>5){
 			try {
 				const adresse = query.replace(" ", "+");
 				const api_endpoint = "https://api-adresse.data.gouv.fr/search";
-				const api_params = { "q": adresse };
+				const api_params = { q: adresse };
 				const response = await fetch(`${api_endpoint}?${new URLSearchParams(api_params)}`);
-				const data = await response.json();
+				const data:{features: AutocompleteResponse} = await response.json();
 				if (response.status === 200) {
-					setApiGps(data.features);
+					setAutocompleteResults(data.features);
 				} else {
 					console.log(`La requête a échoué avec le code de statut: ${response.status}`);
 				}
@@ -73,19 +72,19 @@ export default function AddProperty() {
 			}
 		}
 		else{
-			setApiGps(undefined);
+			setAutocompleteResults([]);
 		}
 	};
 
-	let loadAddress = (data: any) => {
-		setAddressInput(data.properties.label);
-		setPostalInput(data.properties.citycode);
-		setLatInput(data.geometry.coordinates[0]);
-		setLonInput(data.geometry.coordinates[1]);
-		setApiGps(undefined);
+	const loadAddress = ({properties, geometry}: Address) => {
+		setAddressInput(properties.label);
+		setPostalInput(parseInt(properties.citycode));
+		setLatInput(geometry.coordinates[0]);
+		setLonInput(geometry.coordinates[1]);
+		setAutocompleteResults([]);
 	}
 
-	let submitNewProperty = async () => {
+	const submitNewProperty = async () => {
 
 		if (!userId) { // should not happen
 			return;
@@ -112,7 +111,7 @@ export default function AddProperty() {
 
 	}
 
-	let addProperty = async () => {
+	const addProperty = async () => {
 
 		const property:Property = {
 			id: '', // id will be given by the backend
@@ -160,7 +159,7 @@ export default function AddProperty() {
 	}
 
 	const clearInputs = () => {
-		setApiGps(undefined);
+		setAutocompleteResults([]);
 		setNameInput("");
 		setAddressInput("");
 		setPostalInput(0);
@@ -234,11 +233,11 @@ export default function AddProperty() {
 									id="adresse" 
 									placeholder="Adresse" 
 									value={addressInput}
-									onChange={(e) => {setAddressInput(e.target.value);apiAdresse(e.target.value);}}
+									onChange={(e) => {setAddressInput(e.target.value); getAdressAutocomplete(e.target.value);}}
 								/>
-								{results && (
+								{autocompleteResults && (
 									<div className="p-1 absolute mt-2 mr-5 rounded-lg shadow-lg border-2 border-black/10 bg-white" >
-										{results && results.map((result, index) => (
+										{autocompleteResults.map((result, index) => (
 											<button className="hover:bg-gray-100 rounded-lg p-1 my-1 w-full text-wrap" key={index} onClick={(e) => loadAddress(result)}>
 												{result.properties.label}
 											</button>
@@ -376,6 +375,5 @@ export default function AddProperty() {
 
 			</SheetContent>
 		</Sheet>
-
 	)
 }
