@@ -4,6 +4,11 @@ import uuid
 
 # Create your models here.
 
+
+def user_directory_path(instance, filename):
+    return 'uploads/media/property_{0}/{1}'.format(instance.id, filename)
+
+
 class Property(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_id = models.TextField() # given by clerk
@@ -20,6 +25,11 @@ class Property(models.Model):
     hasParkingSpace = models.BooleanField(default=False)
     yearOfConstruction = models.IntegerField(null=True)
     bedroom = models.IntegerField()
+    room = models.IntegerField(default=1)
     floor = models.IntegerField()
     isFurnished = models.BooleanField(default=False)
     cityDepartmentCode = models.IntegerField(null=True)
+    image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
+    is_sold = models.BooleanField(null=True)
+    sold_price = models.FloatField(null=True)
+    sold_date = models.DateTimeField(null=True)

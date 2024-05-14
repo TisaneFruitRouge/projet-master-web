@@ -9,16 +9,20 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Property, PropertyType } from "@/lib/types/property";
 import { addNewProperty } from "@/lib/api/properties";
 import { useAuth } from "@clerk/nextjs";
+import { json } from "stream/consumers";
 
 import { toast } from "sonner"
+import { Value } from "@radix-ui/react-select";
 
 export default function AddProperty() {
 
 	const [nameInput, setNameInput] = useState("");
+	
 	const [addressInput, setAddressInput] = useState("");
-	const [cityInput, setCityInput] = useState("");
-	const [regionInput, setRegionInput] = useState("");
 	const [postalInput, setPostalInput] = useState(0);
+	const [latInput, setLatInput] = useState(0);
+	const [lonInput, setLonInput] = useState(0);
+
 	const [propertyType, setPropertyType] = useState<PropertyType>(1);
 
 	const [surfaceInput, setSurfaceInput] = useState(0);
@@ -34,8 +38,52 @@ export default function AddProperty() {
 
 
 	const [pictureInput, setPictureInput] = useState("");
+	const [fileInput, setFileInput] = useState<File>();
 
 	const { userId } = useAuth();
+
+	const [results, setApiGps] = useState();
+
+	let fileContent: string | ArrayBuffer | null | undefined = "";
+
+	let registerFile = (target: EventTarget & HTMLInputElement) => {
+		if (target) {
+			if (target.files !== null && target.files[0]) {
+				setFileInput(target.files[0]);
+			}
+			setPictureInput(target.value);
+		}
+	}
+
+	let apiAdresse = async (query: string) => {
+		if(query.length>6){
+			try {
+				const adresse = query.replace(" ", "+");
+				const api_endpoint = "https://api-adresse.data.gouv.fr/search";
+				const api_params = { "q": adresse };
+				const response = await fetch(`${api_endpoint}?${new URLSearchParams(api_params)}`);
+				const data = await response.json();
+				if (response.status === 200) {
+					setApiGps(data.features);
+				} else {
+					console.log(`La requête a échoué avec le code de statut: ${response.status}`);
+				}
+			} catch (error) {
+				console.log(`Une erreur s'est produite lors de l'appel de l'API: ${error}`);
+			}
+		}
+		else{
+			setApiGps(undefined);
+		}
+	};
+
+	let loadAddress = (data: any) => {
+		setAddressInput(data.properties.label);
+		setPostalInput(data.properties.citycode);
+		setLatInput(data.geometry.coordinates[0]);
+		setLonInput(data.geometry.coordinates[1]);
+		setApiGps(undefined);
+	}
 
 	let submitNewProperty = async () => {
 
@@ -43,13 +91,36 @@ export default function AddProperty() {
 			return;
 		}
 
+		if (fileInput) {
+			let fileReader = new FileReader();
+			fileReader.onload = async (event) => {
+				let content = event.target?.result;
+				if (content instanceof ArrayBuffer) {
+					// todo : to edit with good way
+					content = content.toString();
+				}
+				fileContent = content;
+				console.log("called with file");
+				await addProperty();
+			}
+			fileReader.readAsDataURL(fileInput);
+		}else {
+			console.log("called without file")
+			await addProperty();
+		}
+
+
+	}
+
+	let addProperty = async () => {
+
 		const property:Property = {
 			id: '', // id will be given by the backend
-			user_id: userId,
+			user_id: userId ?? '',
 			name: nameInput || 'New Property',
 			adress: addressInput,
-			lat: 0,
-			long: 0,
+			lat: latInput,
+			long: lonInput,
 			created_at: new Date(),
 			description: "-",
 			surface: surfaceInput,
@@ -60,9 +131,18 @@ export default function AddProperty() {
 			isFurnished: furnishedInput,
 			yearOfConstruction: constructionInput,
 			bedroom: bedroomInput,
+			room: roomInput,
 			floor: floorInput,
-			cityDepartmentCode: postalInput // todo : to edit	
+			cityDepartmentCode: postalInput, // todo : to edit	
+			is_sold: null,
+			sold_price: null,
+			sold_date: null
 		}
+
+		if (fileContent) {
+			property.image = fileContent.toString();
+		}
+
 
 		const newProperty = await addNewProperty(userId as string, property);
 
@@ -80,10 +160,9 @@ export default function AddProperty() {
 	}
 
 	const clearInputs = () => {
+		setApiGps(undefined);
 		setNameInput("");
 		setAddressInput("");
-		setCityInput("");
-		setRegionInput("");
 		setPostalInput(0);
 		setPropertyType(1);
 		setSurfaceInput(0);
@@ -91,6 +170,7 @@ export default function AddProperty() {
 		setRoomInput(0);
 		setFloorInput(0);
 		setPictureInput("");
+		setFileInput(undefined);
 		setElevatorInput(false);
 		setFurnishedInput(false);
 		setParkingSpaceInput(false);
@@ -144,50 +224,29 @@ export default function AddProperty() {
 
 					<div className="flex flex-col gap-2">
 						<h2 className="mt-2 text-base font-semibold leading-7 text-gray-900">Localisation</h2>
-						<div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
-							<div className="sm:col-span-3">
-								<label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">Address</label>
-								<Input 
-									autoComplete="street-address" 
-									id="street-address" 
-									placeholder="Address" 
-									value={addressInput}
-									onChange={(e) => setAddressInput(e.target.value)}
-								/>
-							</div>
+						<div className="gap-4">
+
 
 							<div className="sm:col-span-3">
-								<label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">City</label>
+								<label htmlFor="adresse" className="block text-sm font-medium leading-6 text-gray-900">Adresse</label>
 								<Input 
 									autoComplete="address-level2" 
-									id="city" 
-									placeholder="Ville" 
-									value={cityInput}
-									onChange={(e) => setCityInput(e.target.value)}
+									id="adresse" 
+									placeholder="Adresse" 
+									value={addressInput}
+									onChange={(e) => {setAddressInput(e.target.value);apiAdresse(e.target.value);}}
 								/>
+								{results && (
+									<div className="p-1 absolute mt-2 mr-5 rounded-lg shadow-lg border-2 border-black/10 bg-white" >
+										{results && results.map((result, index) => (
+											<button className="hover:bg-gray-100 rounded-lg p-1 my-1 w-full text-wrap" key={index} onClick={(e) => loadAddress(result)}>
+												{result.properties.label}
+											</button>
+										))}
+									</div>
+								)}
 							</div>
 
-							<div className="sm:col-span-3">
-								<label htmlFor="region" className="block text-sm font-medium leading-6 text-gray-900">Region/State/Province</label>
-								<Input 
-									autoComplete="address-level1" 
-									id="region" 
-									placeholder="Région" 
-									value={regionInput}
-									onChange={(e) => setRegionInput(e.target.value)}
-								/>
-							</div>
-
-							<div className="sm:col-span-3">
-								<label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">Postal Code</label>
-								<Input 
-									autoComplete="postal-code" 
-									id="postal-code" 
-									placeholder="Code Postal" 
-									value={postalInput}
-									onChange={(e) => setPostalInput(parseInt(e.target.value))}
-								/>
-							</div>
 
 						</div>
 					</div>
@@ -198,12 +257,12 @@ export default function AddProperty() {
 							<div className="sm:col-span-3">
 								<label htmlFor="surface" className="block text-sm font-medium leading-6 text-gray-900">Surface (m²)</label>
 								<Input 
-									type="number" 
+									type="number"
 									id="surface" 
 									placeholder="Surface" 
 									value={surfaceInput} 
 									min={0}
-									onChange={(e) => setSurfaceInput(parseInt(e.target.value))}
+									onChange={(e) => setSurfaceInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -215,7 +274,7 @@ export default function AddProperty() {
 									placeholder="Nb de chambres" 
 									value={bedroomInput} 
 									min={0}
-									onChange={(e) => setBedroomInput(parseInt(e.target.value))}
+									onChange={(e) => setBedroomInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -227,20 +286,20 @@ export default function AddProperty() {
 									placeholder="Nb de chambres" 
 									value={roomInput} 
 									min={0}
-									onChange={(e) => setRoomInput(parseInt(e.target.value))}
+									onChange={(e) => setRoomInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor (m²)</label>
+								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor</label>
 								<Input 
 									type="number" 
 									id="floor" 
 									placeholder="Sol" 
 									value={floorInput} 
 									min={0}
-									onChange={(e) => setFloorInput(parseInt(e.target.value))}
+									onChange={(e) => setFloorInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -253,7 +312,7 @@ export default function AddProperty() {
 									placeholder="Année de construction"
 									value={constructionInput}
 									min={0}
-									onChange={(e) => setConstructionInput(parseInt(e.target.value))}
+									onChange={(e) => setConstructionInput(parseInt(e.target.value) || 0)}
 								/>
 							</div>
 
@@ -301,8 +360,8 @@ export default function AddProperty() {
 							type="file" 
 							id="pictures" 
 							placeholder="Files" 
-							value={pictureInput} 
-							onChange={(e) => setPictureInput(e.target.value)}
+							value={pictureInput}
+							onChange={(e) => registerFile((e.target))}
 						/>
 					</div>
 

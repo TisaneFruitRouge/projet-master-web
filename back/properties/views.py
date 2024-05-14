@@ -10,7 +10,13 @@ def property_list(request):
     List all properties, or create a new property.
     """
     if request.method == 'GET':
-        properties = Property.objects.all()
+        is_sold = request.query_params.get('is_sold')
+        if is_sold is None:
+            properties = Property.objects.all()
+        elif is_sold == 'true':
+            properties = Property.objects.filter(is_sold=True).all()
+        else:
+            properties = Property.objects.filter(is_sold=False).all()
         serializer = PropertySerializer(properties, many=True)
         return Response(serializer.data)
 
@@ -21,7 +27,7 @@ def property_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def property(request, id):
     """
     Returns a single property by ID.
@@ -31,6 +37,20 @@ def property(request, id):
             property = Property.objects.get(pk=id)
             serializer = PropertySerializer(property)
             return Response(serializer.data)
+        except Property.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    elif request.method == 'PUT':
+        try:
+            p = Property.objects.get(pk=id)
+            serializer = PropertySerializer(p, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         except Property.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
