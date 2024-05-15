@@ -1,3 +1,4 @@
+import { ECityNames } from "./city";
 import { PropertyType } from "./property";
 
 export type EstimationRequest = {
@@ -11,6 +12,7 @@ export type EstimationRequest = {
 	room: number,
 	propertyType: PropertyType;
 	cityDepartmentCode: number;
+	city: ECityNames;
 	property_id: string;
 }
 

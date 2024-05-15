@@ -1,3 +1,4 @@
+import { ECityNames } from "./city";
 
 export type PropertyType = 1 | 2 | 3 | 4; //1 = apartment, 2=house, 3=garage, 4=other
 
@@ -6,6 +7,7 @@ export type Property = {
     user_id: string;
     name: string;
     adress: string;
+    city: ECityNames;
     lat: number | null;
     long: number | null;
     created_at: Date;

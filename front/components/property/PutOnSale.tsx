@@ -17,14 +17,11 @@ interface PutOnSaleProps {
 
 export default function PutOnSale({property, isUserProperty}: PutOnSaleProps) {
 
-	console.log(property)
-
 	const [priceInput, setPriceInput] = useState(property.sold_price ?? 0);
 	const [isSoldInput, setIsSoldInput] = useState<boolean | null>(property.is_sold);
 	const [isPriceValidated, setPriceValidationInput] = useState<boolean>(property.is_sold !== null);
 	const putOnSale = async () => {
 
-		console.log(property);
 		if (priceInput > 0) {
 			property.is_sold = false;
 			property.sold_price = priceInput;

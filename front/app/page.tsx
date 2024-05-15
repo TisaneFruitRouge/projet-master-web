@@ -6,11 +6,18 @@ import PropertyForm from "@/components/dashboard/PropertyForm"
 
 export default async function Home() {
 
-  
+  const { userId } = auth();
+
+  let properties:Property[] = [];
+
+  if (userId) {
+    properties = await getPropertiesOfUser(userId);
+  }
   
   return (
     <main className="flex flex-col gap-4 p-8">
       <PropertyForm />
+      <Dashboard/>
     </main>
   );
 }
