@@ -1,18 +1,10 @@
 import MapComponent from "./MapComponent"
-import { Payment, columns } from "./columns"
+import { StatVille, columns } from "./columns"
 import { DataTable } from "./data-table"
+import {statVilleData} from "@/lib/stats/statVilleData";
 
-async function getData(): Promise<Payment[]> {
-    // Fetch data from your API here.
-    return [
-        {
-            id: "728ed52f",
-            amount: 100,
-            status: "pending",
-            email: "m@example.com",
-        },
-        // ...
-    ]
+async function getData(): Promise<StatVille[]> {
+    return statVilleData
 }
 
 export default async function GlobalStats() {

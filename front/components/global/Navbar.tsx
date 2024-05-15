@@ -63,9 +63,6 @@ export default function Navbar() {
               <ListItem href="/statistics/global" title="Statistiques globales">
                 {"Explorer les statistiques globales."}
               </ListItem>
-              <ListItem href="/statistics/personal" title="Statistiques">
-                {"Explorer vos statistiques personnelles."}
-              </ListItem>
               <ListItem href="/recent-sales" title="Ventes">
                 {"Explorer les ventes récentes."}
               </ListItem>

@@ -9,10 +9,10 @@ function MapComponent() {
     const [selectedCity, setSelectedCity] = useState<ECityNames>(ECityNames.STRASBOURG);
 
     return (
-        <div className="w-1/2 flex flex-col">
-            <div className="w-full">
-                <SelectCity 
-                    selectedCity={selectedCity} 
+        <div className="w-1/2 flex flex-col items-center">
+            <div className="w-full flex flex-col items-center">
+                <SelectCity
+                    selectedCity={selectedCity}
                     setSelectedCity={setSelectedCity}
                 />
             </div>
