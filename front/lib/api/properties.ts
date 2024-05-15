@@ -25,6 +25,7 @@ export async function addNewProperty(userId: string, property: Property) {
                 user_id: userId,
                 name: property.name,
                 adress: property.adress,
+                city: property.city,
                 lat: property.lat,
                 long: property.long,
                 description: property.description,

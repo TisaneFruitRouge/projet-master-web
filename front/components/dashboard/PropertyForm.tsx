@@ -12,6 +12,7 @@ import { useAuth } from "@clerk/nextjs";
 
 import { toast } from "sonner"
 import { AutocompleteResponse, Address } from "@/lib/types/autocomplete";
+import { ECityNames, cities } from "@/lib/types/city";
 
 export default function AddProperty() {
 
@@ -22,6 +23,7 @@ export default function AddProperty() {
 	const [postalInput, setPostalInput] = useState(0);
 	const [latInput, setLatInput] = useState(0);
 	const [lonInput, setLonInput] = useState(0);
+	const [city, setCity] = useState<string | null>(null);
 
 	const [propertyType, setPropertyType] = useState<PropertyType>(1);
 
@@ -35,7 +37,6 @@ export default function AddProperty() {
 	const [furnishedInput, setFurnishedInput] = useState(false);
 	const [parkingSpaceInput, setParkingSpaceInput] = useState(false);
 	const [gardenInput, setGardenInput] = useState(false);
-
 
 	const [pictureInput, setPictureInput] = useState("");
 	const [fileInput, setFileInput] = useState<File>();
@@ -78,6 +79,7 @@ export default function AddProperty() {
 	};
 
 	const loadAddress = ({properties, geometry}: Address) => {
+		setCity(properties.city.toLowerCase());
 		setAddressInput(properties.label);
 		setPostalInput(parseInt(properties.citycode));
 		setLatInput(geometry.coordinates[0]);
@@ -97,7 +99,11 @@ export default function AddProperty() {
 				description: "Merci de sélectionner une adresse proposée !"
 			});
 		}
-		else{
+		else if (city !== null && !cities.includes(city.toLowerCase() as ECityNames)) {
+			toast("La ville saisie n'est pas disponible pour un estimation", {
+				description: `Les villes dispinibles sont ${cities.map(city=>(city as string).charAt(0).toUpperCase() + (city as string).slice(1)).join(', ')}.`
+			});
+		} else {
 			if (!userId) { // should not happen
 				return;
 			}
@@ -128,6 +134,7 @@ export default function AddProperty() {
 			user_id: userId ?? '',
 			name: nameInput || 'New Property',
 			adress: addressInput,
+			city: city as ECityNames,
 			lat: latInput,
 			long: lonInput,
 			created_at: new Date(),
@@ -174,6 +181,7 @@ export default function AddProperty() {
 		setAddressInput("");
 		setPostalInput(0);
 		setPropertyType(1);
+		setCity(null);
 		setSurfaceInput(0);
 		setBedroomInput(0);
 		setRoomInput(0);
@@ -309,7 +317,7 @@ export default function AddProperty() {
 									placeholder="Etage" 
 									value={floorInput} 
 									min={0}
-									onChange={(e) => setFloorInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setFloorInput(parseInt(e.target.value))}
 								/>
 							</div>
 

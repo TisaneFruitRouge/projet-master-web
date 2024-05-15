@@ -14,6 +14,7 @@ class Property(models.Model):
     user_id = models.TextField() # given by clerk
     name = models.TextField()
     adress = models.TextField()
+    city = models.TextField(null=True)
     lat = models.FloatField(null=True)
     long = models.FloatField(null=True)
     created_at = models.DateTimeField(default=timezone.now) 

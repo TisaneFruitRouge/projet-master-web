@@ -4,7 +4,7 @@ import { Property } from "@/lib/types/property";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getEstimation, getPropertyEstimation } from "@/lib/api/estimate";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { ECityNames } from "@/lib/types/city";
 
 interface EstimatePriceProps {
     property: Property
@@ -30,6 +30,7 @@ export default function EstimatePrice({property}: EstimatePriceProps) {
             room: 4,
             propertyType: property.propertyType,
             cityDepartmentCode: property.cityDepartmentCode || 59,
+            city: property.city,
             property_id: property.id
         })
         setEstimation(estimation ?? 0)
