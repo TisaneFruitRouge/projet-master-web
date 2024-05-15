@@ -28,7 +28,7 @@ export default function AddProperty() {
 	const [bedroomInput, setBedroomInput] = useState(0);
 	const [roomInput, setRoomInput] = useState(0);
 	const [floorInput, setFloorInput] = useState(0);
-	const [constructionInput, setConstructionInput] = useState(0);
+	const [constructionInput, setConstructionInput] = useState(2000);
 
 	const [elevatorInput, setElevatorInput] = useState(false);
 	const [furnishedInput, setFurnishedInput] = useState(false);
@@ -112,49 +112,55 @@ export default function AddProperty() {
 	}
 
 	const addProperty = async () => {
-
-		const property:Property = {
-			id: '', // id will be given by the backend
-			user_id: userId ?? '',
-			name: nameInput || 'New Property',
-			adress: addressInput,
-			lat: latInput,
-			long: lonInput,
-			created_at: new Date(),
-			description: "-",
-			surface: surfaceInput,
-			propertyType: propertyType,
-			hasElevator: elevatorInput,
-			hasGarden: gardenInput,
-			hasParkingSpace: parkingSpaceInput,
-			isFurnished: furnishedInput,
-			yearOfConstruction: constructionInput,
-			bedroom: bedroomInput,
-			room: roomInput,
-			floor: floorInput,
-			cityDepartmentCode: postalInput, // todo : to edit	
-			is_sold: null,
-			sold_price: null,
-			sold_date: null
-		}
-
-		if (fileContent) {
-			property.image = fileContent.toString();
-		}
-
-
-		const newProperty = await addNewProperty(userId as string, property);
-
-		if (newProperty === null) {
+		if(addressInput==""){
 			toast("Error while adding the property", {
 				description: "We couldn't successfully add the new property to your dashboard"
 			});
-		} else {
-			toast("New property added successfully", {
-				description: "The property was added to your dashboard"
-			});
-			clearInputs();
-			window.location.reload()
+		}
+		else{
+			const property:Property = {
+				id: '', // id will be given by the backend
+				user_id: userId ?? '',
+				name: nameInput || 'New Property',
+				adress: addressInput,
+				lat: latInput,
+				long: lonInput,
+				created_at: new Date(),
+				description: "-",
+				surface: surfaceInput,
+				propertyType: propertyType,
+				hasElevator: elevatorInput,
+				hasGarden: gardenInput,
+				hasParkingSpace: parkingSpaceInput,
+				isFurnished: furnishedInput,
+				yearOfConstruction: constructionInput,
+				bedroom: bedroomInput,
+				room: roomInput,
+				floor: floorInput,
+				cityDepartmentCode: postalInput, 
+				is_sold: null,
+				sold_price: null,
+				sold_date: null
+			}
+
+			if (fileContent) {
+				property.image = fileContent.toString();
+			}
+
+
+			const newProperty = await addNewProperty(userId as string, property);
+
+			if (newProperty === null) {
+				toast("Error while adding the property", {
+					description: "We couldn't successfully add the new property to your dashboard"
+				});
+			} else {
+				toast("New property added successfully", {
+					description: "The property was added to your dashboard"
+				});
+				clearInputs();
+				window.location.reload()
+			}
 		}
 	}
 
@@ -183,9 +189,9 @@ export default function AddProperty() {
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:w-[1000px]  overflow-y-scroll">
 				<SheetHeader>
-					<SheetTitle>Add a new property</SheetTitle>
+					<SheetTitle>Ajouter une nouvelle propriété</SheetTitle>
 					<SheetDescription>
-						Fill all the following fields.
+						Renseigner les élements suivants.
 					</SheetDescription>
 				</SheetHeader>
 
@@ -235,7 +241,7 @@ export default function AddProperty() {
 									value={addressInput}
 									onChange={(e) => {setAddressInput(e.target.value); getAdressAutocomplete(e.target.value);}}
 								/>
-								{autocompleteResults && (
+								{autocompleteResults && autocompleteResults.length>0 && (
 									<div className="p-1 absolute mt-2 mr-5 rounded-lg shadow-lg border-2 border-black/10 bg-white" >
 										{autocompleteResults.map((result, index) => (
 											<button className="hover:bg-gray-100 rounded-lg p-1 my-1 w-full text-wrap" key={index} onClick={(e) => loadAddress(result)}>
@@ -261,41 +267,41 @@ export default function AddProperty() {
 									placeholder="Surface" 
 									value={surfaceInput} 
 									min={0}
-									onChange={(e) => setSurfaceInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setSurfaceInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 							<div className="sm:col-span-3">
-								<label htmlFor="bedroom" className="block text-sm font-medium leading-6 text-gray-900">Number of Bedrooms</label>
+								<label htmlFor="bedroom" className="block text-sm font-medium leading-6 text-gray-900">Nombre de chambres</label>
 								<Input 
 									type="number" 
 									id="bedroom" 
-									placeholder="Nb de chambres" 
+									placeholder="Nombre de chambres" 
 									value={bedroomInput} 
 									min={0}
-									onChange={(e) => setBedroomInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setBedroomInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 							<div className="sm:col-span-3">
-								<label htmlFor="room" className="block text-sm font-medium leading-6 text-gray-900">Number of rooms</label>
+								<label htmlFor="room" className="block text-sm font-medium leading-6 text-gray-900">Nombre de pièces</label>
 								<Input 
 									type="number" 
 									id="room" 
-									placeholder="Nb de chambres" 
+									placeholder="Nombre de pièces" 
 									value={roomInput} 
 									min={0}
-									onChange={(e) => setRoomInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setRoomInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor</label>
+								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Etage</label>
 								<Input 
 									type="number" 
 									id="floor" 
-									placeholder="Sol" 
+									placeholder="Etage" 
 									value={floorInput} 
 									min={0}
 									onChange={(e) => setFloorInput(parseInt(e.target.value) || 0)}
@@ -304,14 +310,14 @@ export default function AddProperty() {
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="construction" className="block text-sm font-medium leading-6 text-gray-900">Year or construction</label>
+								<label htmlFor="construction" className="block text-sm font-medium leading-6 text-gray-900">Année de construction</label>
 								<Input
 									type="number"
 									id="construction"
 									placeholder="Année de construction"
 									value={constructionInput}
 									min={0}
-									onChange={(e) => setConstructionInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setConstructionInput(parseInt(e.target.value))}
 								/>
 							</div>
 
@@ -319,7 +325,7 @@ export default function AddProperty() {
 							<div className="sm:col-span-4 flex flex-col gap-2">
 								<div className="flex items-center gap-1">
 									<Checkbox id="elevator"
-											  onCheckedChange={(e) => setElevatorInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setElevatorInput(Boolean(e))}
 											  checked={elevatorInput}
 									/>
 									<label htmlFor="elevator"
@@ -327,7 +333,7 @@ export default function AddProperty() {
 								</div>
 								<div className="flex items-center gap-1">
 									<Checkbox id="furnished"
-											  onCheckedChange={(e) => setFurnishedInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setFurnishedInput(Boolean(e))}
 											  checked={furnishedInput}
 									/>
 									<label htmlFor="furnished"
@@ -335,7 +341,7 @@ export default function AddProperty() {
 								</div>
 								<div className="flex items-center gap-1">
 									<Checkbox id="parkingSpace"
-											  onCheckedChange={(e) => setParkingSpaceInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setParkingSpaceInput(Boolean(e))}
 											  checked={parkingSpaceInput}
 									/>
 									<label htmlFor="parkingSpace"
@@ -343,7 +349,7 @@ export default function AddProperty() {
 								</div>
 								<div className="flex items-center gap-1">
 									<Checkbox id="garden"
-											  onCheckedChange={(e) => setGardenInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setGardenInput(Boolean(e))}
 											  checked={gardenInput}
 									/>
 									<label htmlFor="garden"
@@ -354,7 +360,7 @@ export default function AddProperty() {
 					</div>
 
 					<div>
-						<label htmlFor="pictures" className="block text-sm font-medium leading-6 text-gray-900">Images of property</label>
+						<label htmlFor="pictures" className="block text-sm font-medium leading-6 text-gray-900">Images de la propriété</label>
 						<Input 
 							type="file" 
 							id="pictures" 
@@ -365,9 +371,9 @@ export default function AddProperty() {
 					</div>
 
 					<div className="flex gap-2">
-						<Button className="w-1/2" onClick={submitNewProperty} type="submit" id="submit">Add property</Button>
+						<Button className="w-1/2" onClick={submitNewProperty} type="submit" id="submit">Ajouter</Button>
 						<SheetClose asChild>
-							<Button variant="outline" className="w-1/2" id="cancel">Cancel</Button>
+							<Button variant="outline" className="w-1/2" id="cancel">Annuler</Button>
 						</SheetClose>
 					</div>
 
