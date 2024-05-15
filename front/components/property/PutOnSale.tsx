@@ -12,9 +12,12 @@ import {toast} from "sonner";
 
 interface PutOnSaleProps {
 	property: Property
+	isUserProperty: boolean
 }
 
-export default function PutOnSale({property}: PutOnSaleProps) {
+export default function PutOnSale({property, isUserProperty}: PutOnSaleProps) {
+
+	console.log(property)
 
 	const [priceInput, setPriceInput] = useState(property.sold_price ?? 0);
 	const [isSoldInput, setIsSoldInput] = useState<boolean | null>(property.is_sold);
@@ -66,27 +69,29 @@ export default function PutOnSale({property}: PutOnSaleProps) {
 	}
 
 	return (
-		<div className="bg-white rounded-md border border-solid border-black/10 p-4 shadow-md">
+		<div className={isUserProperty || isSoldInput ?  "bg-white rounded-md border border-solid border-black/10 p-4 shadow-md" : ""}>
 			{
 				isPriceValidated && priceInput > 0 ?
-					<div>
-						Selling price : {priceInput}€
-						<br />
+					<div className="flex flex-col justify-center items-center">
+						<h2 className="italic text-green-700">Selling price:</h2>
+						<h1 className="text-4xl font-extrabold text-green-800">{priceInput}€</h1>
+						<br/>
 
 						{isSoldInput !== null && !isSoldInput ?
 							<Button onClick={markAsSold}>
 								Mark as sold
 							</Button> :
-							<div className="bg-green-200">Property sold</div>
+							<div className="bg-green-100 relative flex flex-col gap-4 justify-center items-center p-8"><h1 className="text-4xl font-extrabold text-green-800">Property
+								sold</h1> </div>
 						}
 					</div> :
-
-					<Dialog>
-						<DialogTrigger asChild>
-							<Button>Put on sale</Button>
-						</DialogTrigger>
-						<DialogContent>
-							<DialogHeader>
+					isUserProperty ?
+						<Dialog>
+							<DialogTrigger asChild>
+								<Button>Put on sale</Button>
+							</DialogTrigger>
+							<DialogContent>
+								<DialogHeader>
 								<DialogTitle>Put the property on sale</DialogTitle>
 							</DialogHeader>
 							<div className="flex items-center space-x-2">
@@ -106,6 +111,7 @@ export default function PutOnSale({property}: PutOnSaleProps) {
 							</DialogFooter>
 						</DialogContent>
 					</Dialog>
+						: <></>
 			}
 		</div>
 	)
