@@ -18,6 +18,7 @@ export default function AddProperty() {
 	const [nameInput, setNameInput] = useState("");
 	
 	const [addressInput, setAddressInput] = useState("");
+	const [addressValide, setAddressValide] = useState(false);
 	const [postalInput, setPostalInput] = useState(0);
 	const [latInput, setLatInput] = useState(0);
 	const [lonInput, setLonInput] = useState(0);
@@ -82,85 +83,88 @@ export default function AddProperty() {
 		setLatInput(geometry.coordinates[0]);
 		setLonInput(geometry.coordinates[1]);
 		setAutocompleteResults([]);
+		setAddressValide(true);
 	}
 
 	const submitNewProperty = async () => {
-
-		if (!userId) { // should not happen
-			return;
-		}
-
-		if (fileInput) {
-			let fileReader = new FileReader();
-			fileReader.onload = async (event) => {
-				let content = event.target?.result;
-				if (content instanceof ArrayBuffer) {
-					// todo : to edit with good way
-					content = content.toString();
-				}
-				fileContent = content;
-				console.log("called with file");
-				await addProperty();
-			}
-			fileReader.readAsDataURL(fileInput);
-		}else {
-			console.log("called without file")
-			await addProperty();
-		}
-
-
-	}
-
-	const addProperty = async () => {
 		if(addressInput==""){
-			toast("Error while adding the property", {
-				description: "We couldn't successfully add the new property to your dashboard"
+			toast("Plusieurs élements du formulaire ne sont pas renseignés", {
+				description: "Veuillez renseigner ces derniers !"
+			});
+		}
+		else if(!addressValide){
+			toast("L'adresse saisie est invalide.", {
+				description: "Merci de sélectionner une adresse proposée !"
 			});
 		}
 		else{
-			const property:Property = {
-				id: '', // id will be given by the backend
-				user_id: userId ?? '',
-				name: nameInput || 'New Property',
-				adress: addressInput,
-				lat: latInput,
-				long: lonInput,
-				created_at: new Date(),
-				description: "-",
-				surface: surfaceInput,
-				propertyType: propertyType,
-				hasElevator: elevatorInput,
-				hasGarden: gardenInput,
-				hasParkingSpace: parkingSpaceInput,
-				isFurnished: furnishedInput,
-				yearOfConstruction: constructionInput,
-				bedroom: bedroomInput,
-				room: roomInput,
-				floor: floorInput,
-				cityDepartmentCode: postalInput, 
-				is_sold: null,
-				sold_price: null,
-				sold_date: null
+			if (!userId) { // should not happen
+				return;
 			}
 
-			if (fileContent) {
-				property.image = fileContent.toString();
+			if (fileInput) {
+				let fileReader = new FileReader();
+				fileReader.onload = async (event) => {
+					let content = event.target?.result;
+					if (content instanceof ArrayBuffer) {
+						// todo : to edit with good way
+						content = content.toString();
+					}
+					fileContent = content;
+					console.log("called with file");
+					await addProperty();
+				}
+				fileReader.readAsDataURL(fileInput);
+			}else {
+				console.log("called without file")
+				await addProperty();
 			}
+		}
+	}
+
+	const addProperty = async () => {
+		const property:Property = {
+			id: '', // id will be given by the backend
+			user_id: userId ?? '',
+			name: nameInput || 'New Property',
+			adress: addressInput,
+			lat: latInput,
+			long: lonInput,
+			created_at: new Date(),
+			description: "-",
+			surface: surfaceInput,
+			propertyType: propertyType,
+			hasElevator: elevatorInput,
+			hasGarden: gardenInput,
+			hasParkingSpace: parkingSpaceInput,
+			isFurnished: furnishedInput,
+			yearOfConstruction: constructionInput,
+			bedroom: bedroomInput,
+			room: roomInput,
+			floor: floorInput,
+			cityDepartmentCode: postalInput, 
+			is_sold: null,
+			sold_price: null,
+			sold_date: null
+		}
+
+		if (fileContent) {
+			property.image = fileContent.toString();
+		}
 
 
-			const newProperty = await addNewProperty(userId as string, property);
+		const newProperty = await addNewProperty(userId as string, property);
 
-			if (newProperty === null) {
-				toast("Error while adding the property", {
-					description: "We couldn't successfully add the new property to your dashboard"
-				});
-			} else {
-				toast("New property added successfully", {
-					description: "The property was added to your dashboard"
-				});
-				clearInputs();
-				window.location.reload()
-			}
+		if (newProperty === null) {
+			toast("Error while adding the property", {
+				description: "We couldn't successfully add the new property to your dashboard"
+			});
+		} else {
+			toast("New property added successfully", {
+				description: "The property was added to your dashboard"
+			});
+			clearInputs();
+			window.location.reload()
 		}
 	}
 
@@ -180,6 +184,7 @@ export default function AddProperty() {
 		setFurnishedInput(false);
 		setParkingSpaceInput(false);
 		setGardenInput(false);
+		setAddressValide(false);
 	}
 
 	return (
@@ -239,7 +244,7 @@ export default function AddProperty() {
 									id="adresse" 
 									placeholder="Adresse" 
 									value={addressInput}
-									onChange={(e) => {setAddressInput(e.target.value); getAdressAutocomplete(e.target.value);}}
+									onChange={(e) => {setAddressInput(e.target.value); setAddressValide(false);getAdressAutocomplete(e.target.value);}}
 								/>
 								{autocompleteResults && autocompleteResults.length>0 && (
 									<div className="p-1 absolute mt-2 mr-5 rounded-lg shadow-lg border-2 border-black/10 bg-white" >
