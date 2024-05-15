@@ -11,6 +11,7 @@ export default async function PropertyPage({ params }: { params: { id: string } 
     const {id} = params;
 
     const property = await getProperty(id) as Property;
+    const isUserProperty = userId === property.user_id;
 
     if (property.image) {
         property.image = await getImage(property.image);
@@ -36,7 +37,7 @@ export default async function PropertyPage({ params }: { params: { id: string } 
                     </div>
                 </div>
             </div>
-            <PutOnSale property={property}/>
+            <PutOnSale property={property} isUserProperty={isUserProperty}/>
             <EstimatePrice property={property}/>
         </main> 
     )

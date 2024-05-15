@@ -29,7 +29,7 @@ export default function PropertyCard({property}: PropertyCardProps) {
 
     return (
         <Link key={property.id} href={`/property/${property.id}`}>
-			<div className="flex flex-col gap-2 w-64 bg-slate-100 rounded-xl hover:-translate-y-1 duration-300 shadow-md border border-black border-solid">
+			<div className="flex flex-col gap-2 w-72 bg-slate-100 rounded-xl hover:-translate-y-1 duration-300 shadow-md border border-black border-solid">
 				<AspectRatio ratio={16 / 12}>
 					<Image
 						className="w-full h-full img-responsive object-cover mx-auto rounded-t-xl"
@@ -45,7 +45,7 @@ export default function PropertyCard({property}: PropertyCardProps) {
 						<span className="title font-medium text-lg">{property.name}</span>
 					</div>
 					<p className="location">Strasbourg</p>
-					<div className="flex justify-between text-xs gap-2 ">
+					<div className="flex flex-wrap text-xs gap-2 ">
 						<Badge>{property.surface} m²</Badge>
 						<Badge>{property.room} pièces</Badge>
 						<Badge>{property.bedroom} chambres</Badge>
