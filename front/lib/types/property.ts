@@ -17,7 +17,12 @@ export type Property = {
     hasParkingSpace: boolean;
     yearOfConstruction: number | null;
     bedroom: number;
+    room: number;
     floor: number;
     isFurnished : boolean;
     cityDepartmentCode: number | null;
-}   
+    image?: string | null;
+    is_sold: boolean | null;
+    sold_price: number | null;
+    sold_date: Date | null;
+}

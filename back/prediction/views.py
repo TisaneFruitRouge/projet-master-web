@@ -21,7 +21,7 @@ def prediction(request):
         if serializer.is_valid():
             request = serializer.data
 
-            with open(f'ai-models/lille-gbr.sav', 'rb') as f:
+            with open(f'ai-models/v1_gbr_lille.sav', 'rb') as f:
                 clf = pickle.load(f)
                 inputData = {
                     'elevator': request['hasElevator'], 
