@@ -21,7 +21,7 @@ export async function getSingleInvestmentSimulation(id: string) {
 	} else return null;
 }
 
-export async function getPropertyInvestmentSimulations(property_id: string) {
+export async function getPropertyInvestmentSimulations(property_id: string) : Promise<Investment[]> {
 	const response = await fetch(`${URL}/api/investment/property/${property_id}`,
 		{
 			method: "GET",
@@ -35,7 +35,7 @@ export async function getPropertyInvestmentSimulations(property_id: string) {
 	if (response.ok) {
 		const simulations = await response.json();
 		return simulations ?? []
-	} else return null;
+	} else return [];
 }
 
 export async function makePropertyInvestmentSimulation(request: InvestmentRequest) {

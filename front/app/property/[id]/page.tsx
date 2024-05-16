@@ -7,7 +7,7 @@ import {auth} from "@clerk/nextjs";
 import PutOnSale from "@/components/property/PutOnSale";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import EstimateInvestment from "@/components/property/EstimateInvestment";
+import SimulateInvestment from "@/components/property/SimulateInvestment";
 
 export default async function PropertyPage({ params }: { params: { id: string } }) {
     const { userId } = auth();
@@ -22,8 +22,10 @@ export default async function PropertyPage({ params }: { params: { id: string } 
     return (
         <main className="p-8 flex flex-col gap-2 shadow-sm">
             <div className="flex justify-end gap-4 p-4">
-                <EstimateInvestment property={property}/>
-                <Button variant="outline" >Voir les simulations</Button>
+                <SimulateInvestment property={property}/>
+                <Link href={`/property/${property.id}/simulations/`}>
+                    <Button variant="outline" >Voir les simulations</Button>
+                </Link>
             </div>
             <div className="p-4 border border-solid border-black/10 rounded-md flex gap-4">
                 <Image 

@@ -2,7 +2,6 @@
 export type InvestmentRequest = {
 	user_id: string;
 	property_id: string;
-	simulation_date: Date | null;
 	monthly_rent: number;
 	monthly_charges: number;
 	property_tax: number;

@@ -14,7 +14,7 @@ interface EstimateInvestmentProps {
 	property: Property
 }
 
-export default function EstimateInvestment({property}: EstimateInvestmentProps) {
+export default function SimulateInvestment({property}: EstimateInvestmentProps) {
 	const [rentInput, setRentInput] = useState(0);
 	const [rateInput, setRateInput] = useState(0);
 	const [creditInput, setCreditInput] = useState(0);
@@ -24,9 +24,8 @@ export default function EstimateInvestment({property}: EstimateInvestmentProps) 
 
 	const estimateInvestment = async () => {
 		const investment: InvestmentRequest = {
-			user_id: property.user_id ?? '', // todo : to edit
+			user_id: property.user_id ?? '',
 			property_id: property.id,
-			simulation_date: new Date(),
 			monthly_rent: rentInput,
 			monthly_charges: chargeInput,
 			property_tax: propertyTaxInput,

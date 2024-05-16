@@ -2,13 +2,16 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from investment.models import Investment
-from investment.serializers import InvestmentSerializer
+from investment.serializers import InvestmentSerializer, InvestmentRequestSerializer
+from datetime import date
+
+from prediction.views import get_prediction
 
 
 @api_view(['GET', 'POST'])
 def investment_list(request, property_id):
     """
-       List all investments, or create a new simulation.
+       List all investment simulations, or create a new simulation.
     """
 
     if request.method == 'GET':
@@ -20,17 +23,39 @@ def investment_list(request, property_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     elif request.method == 'POST':
-        serializer = InvestmentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = InvestmentRequestSerializer(data=request.data)
+            if serializer.is_valid():
+                request = serializer.data
+
+                property_id = request['property_id']
+
+                # todo : TRI
+                # property_prediction = get_prediction(property_id)
+                # print(property_prediction)
+
+                request['simulation_date'] = date.today()
+                request['net_profitability'] = serializer.get_net_profitability(request)
+                request['gross_profitability'] = serializer.get_gross_profitability(request)
+                request['internal_rate_of_profitability'] = serializer.get_internal_rate_of_profitability(request)
+                request['monthly_cashflow'] = serializer.get_monthly_cashflow(request)
+
+                print(request)
+
+                serializer = InvestmentSerializer(data=request)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Investment.DoesNotExist:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET', 'PUT'])
 def get_investment(request, id):
     """
-    Returns a single investment by ID.
+    Returns a single investment simulation by ID.
     """
     if request.method == 'GET':
         try:
