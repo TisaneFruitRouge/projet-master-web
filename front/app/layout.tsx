@@ -6,6 +6,7 @@ import Navbar from "@/components/global/Navbar";
 import { Toaster } from "@/components/ui/sonner"
 
 import { ClerkProvider } from '@clerk/nextjs'
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <Head>
+          <link
+            href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css"
+            rel="stylesheet"
+          />
+        </Head>
         <body className={`${inter.className} min-h-screen`}>
           <Navbar />
           {children}

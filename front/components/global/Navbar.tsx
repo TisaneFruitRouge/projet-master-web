@@ -43,13 +43,7 @@ export default function Navbar() {
         <NavigationMenuItem>
           <NavigationMenuTrigger>Estimer</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <ListItem href="/estimate/sell-price" title="Prix de vente">
-                {"Estimer le prix de vente d'un bien."}
-              </ListItem>
-              <ListItem href="/estimate/rent" title="Prix de location">
-                {"Estimer le prix de location d'un bien."}
-              </ListItem>
+            <ul className="flex p-6 md:w-[200px] lg:w-[250px]">
               <ListItem href="/estimate/roi" title="Rentabilité">
                 {"Estimer la rentabilité d'un investissement."}
               </ListItem>
@@ -63,7 +57,7 @@ export default function Navbar() {
               <ListItem href="/statistics/global" title="Statistiques globales">
                 {"Explorer les statistiques globales."}
               </ListItem>
-              <ListItem href="/recent-sales" title="Ventes">
+              <ListItem href="/sales" title="Ventes">
                 {"Explorer les ventes récentes."}
               </ListItem>
             </ul>

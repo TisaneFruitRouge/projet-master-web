@@ -19,9 +19,9 @@ export default function PutOnSale({property, isUserProperty}: PutOnSaleProps) {
 
 	const [priceInput, setPriceInput] = useState(property.sold_price ?? 0);
 	const [isSoldInput, setIsSoldInput] = useState<boolean | null>(property.is_sold);
-	const [isPriceValidated, setPriceValidationInput] = useState<boolean>(property.is_sold !== null);
+	const [isPriceValidated, setPriceValidationInput] = useState(property.is_sold !== null);
+	
 	const putOnSale = async () => {
-
 		if (priceInput > 0) {
 			property.is_sold = false;
 			property.sold_price = priceInput;
@@ -70,26 +70,27 @@ export default function PutOnSale({property, isUserProperty}: PutOnSaleProps) {
 			{
 				isPriceValidated && priceInput > 0 ?
 					<div className="flex flex-col justify-center items-center">
-						<h2 className="italic text-green-700">Selling price:</h2>
+						<h2 className="italic text-green-700">Prix de vente:</h2>
 						<h1 className="text-4xl font-extrabold text-green-800">{priceInput}€</h1>
 						<br/>
 
 						{isSoldInput !== null && !isSoldInput ?
 							<Button onClick={markAsSold}>
-								Mark as sold
+								Marquer comme vendu
 							</Button> :
-							<div className="bg-green-100 relative flex flex-col gap-4 justify-center items-center p-8"><h1 className="text-4xl font-extrabold text-green-800">Property
-								sold</h1> </div>
+							<div className="bg-green-100 relative flex flex-col gap-4 justify-center items-center p-8">
+								<h1 className="text-4xl font-extrabold text-green-800">Propriété</h1>
+							</div>
 						}
 					</div> :
 					isUserProperty ?
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button>Put on sale</Button>
+								<Button>Mettre en vente</Button>
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
-								<DialogTitle>Put the property on sale</DialogTitle>
+								<DialogTitle>Mettre la propriété en vente</DialogTitle>
 							</DialogHeader>
 							<div className="flex items-center space-x-2">
 								<label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">Price (€)</label>
@@ -103,7 +104,7 @@ export default function PutOnSale({property, isUserProperty}: PutOnSaleProps) {
 							</div>
 							<DialogFooter>
 								<DialogClose asChild>
-									<Button onClick={putOnSale}>Put on Sale</Button>
+									<Button onClick={putOnSale}>Mettre en vente</Button>
 								</DialogClose>
 							</DialogFooter>
 						</DialogContent>

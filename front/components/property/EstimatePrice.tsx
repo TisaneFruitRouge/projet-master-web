@@ -4,7 +4,6 @@ import { Property } from "@/lib/types/property";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getEstimation, getPropertyEstimation } from "@/lib/api/estimate";
-import { ECityNames } from "@/lib/types/city";
 
 interface EstimatePriceProps {
     property: Property
@@ -54,16 +53,16 @@ export default function EstimatePrice({property}: EstimatePriceProps) {
         <div className={`${estimation === 0 ? 'bg-white' : 'bg-green-50'} rounded-md border border-solid border-black/10 p-4 shadow-md`}>
             {
                 loading ?
-                    <h1 className="text-center">Loading...</h1> 
+                    <h1 className="text-center">Chargement...</h1> 
                 :
                 estimation === 0 ? 
                     <div>
-                        <Button onClick={estimate}>Estimate the price</Button>
+                        <Button onClick={estimate}>Estimer le prix</Button>
                     </div>
                     :
                     <div className="relative flex flex-col gap-4 justify-center items-center p-8">
                         {dateOfEstimation !== null && <span className="absolute top-0 left-0 text-sm italic">Date: {dateOfEstimation}</span>}
-                        <h2 className="italic text-green-700">Estimated price:</h2>
+                        <h2 className="italic text-green-700">Prix estimé:</h2>
                         <h1 className="text-4xl font-extrabold text-green-800">{estimation}€</h1>
                     </div>
             }
