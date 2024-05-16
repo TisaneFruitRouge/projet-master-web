@@ -6,6 +6,8 @@ back/**/__pycache__/*
 */__pycache__/*
 *.py[cod]
 back/properties/migrations
+back/prediction/migrations
 back/ai-models/*
+back/back/__pycache__/
 
 front/yarn.lock

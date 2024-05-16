@@ -5,6 +5,10 @@ import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTi
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {useState} from "react";
+import {Investment, InvestmentRequest} from "@/lib/types/investment";
+import {addNewProperty} from "@/lib/api/properties";
+import {toast} from "sonner";
+import {makePropertyInvestmentSimulation} from "@/lib/api/investment";
 
 interface EstimateInvestmentProps {
 	property: Property
@@ -17,6 +21,43 @@ export default function EstimateInvestment({property}: EstimateInvestmentProps) 
 	const [creditDurationInput, setCreditDurationInput] = useState(0);
 	const [chargeInput, setChargeInput] = useState(0);
 	const [propertyTaxInput, setPropertyTaxInput] = useState(0);
+
+	const estimateInvestment = async () => {
+		const investment: InvestmentRequest = {
+			user_id: property.user_id ?? '', // todo : to edit
+			property_id: property.id,
+			simulation_date: new Date(),
+			monthly_rent: rentInput,
+			monthly_charges: chargeInput,
+			property_tax: propertyTaxInput,
+			credit_amount: creditInput,
+			credit_duration: creditDurationInput,
+			interest_rate: rateInput,
+		};
+
+		const newSimulation = await makePropertyInvestmentSimulation(investment);
+
+		if (newSimulation === null) {
+			toast("Error while adding the simulation", {
+				description: "We couldn't successfully add the new simulation to the property"
+			});
+		} else {
+			toast("New simulation added successfully", {
+				description: "The simulation was added to your property"
+			});
+			clearInputs();
+			window.location.reload()
+		}
+	}
+
+	const clearInputs = () => {
+		setRentInput(0);
+		setRateInput(0);
+		setChargeInput(0);
+		setPropertyTaxInput(0);
+		setCreditInput(0);
+		setCreditDurationInput(0);
+	}
 
 	return (
 		<Dialog>
@@ -102,7 +143,7 @@ export default function EstimateInvestment({property}: EstimateInvestmentProps) 
 					</div>
 					<DialogFooter>
 						<DialogClose asChild>
-							<Button>Estimate</Button>
+							<Button onClick={estimateInvestment}>Estimate</Button>
 						</DialogClose>
 					</DialogFooter>
 			</DialogContent>

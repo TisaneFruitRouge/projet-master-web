@@ -40,6 +40,7 @@ if 'API_HOST' in os.environ.keys():
 INSTALLED_APPS = [
     'properties.apps.PropertiesConfig',
     'prediction.apps.PredictionConfig',
+    'investment.apps.InvestmentConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
