@@ -5,6 +5,9 @@ import Image from "next/image";
 import NoImage from "@/lib/assets/noimage.jpg"
 import {auth} from "@clerk/nextjs";
 import PutOnSale from "@/components/property/PutOnSale";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
+import SimulateInvestment from "@/components/property/SimulateInvestment";
 import IconLabel from "@/components/global/IconLabel";
 import PropertyLocationMap from "@/components/property/PropertyLocationMap";
 
@@ -15,6 +18,7 @@ import { GiFlowerPot } from "react-icons/gi";
 import { LuParkingCircle } from "react-icons/lu";
 import { PiCouchLight } from "react-icons/pi";
 import { Badge } from "@/components/ui/badge";
+
 
 export default async function PropertyPage({ params }: { params: { id: string } }) {
     const { userId } = auth();
@@ -31,6 +35,12 @@ export default async function PropertyPage({ params }: { params: { id: string } 
 
     return (
         <main className="p-8 flex flex-col gap-2 shadow-sm">
+            <div className="flex justify-end gap-4 p-4">
+                <SimulateInvestment property={property}/>
+                <Link href={`/property/${property.id}/simulations/`}>
+                    <Button variant="outline" >Voir les simulations</Button>
+                </Link>
+            </div>
             <div className="flex justify-between gap-4 p-4 border border-solid border-black/10 rounded-md">
                 <Image 
                     className="rounded-sm w-fit"

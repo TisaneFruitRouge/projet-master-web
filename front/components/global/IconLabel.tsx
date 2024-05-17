@@ -3,7 +3,7 @@ import { Label } from "../ui/label";
 
 interface IconLabel {
     icon: React.ReactNode;
-    label: string;
+    label: string | number;
 }
 
 export default function IconLabel({icon, label}: IconLabel) {

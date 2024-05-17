@@ -23,5 +23,6 @@ urlpatterns = [
     path('api/prediction/', include('prediction.urls')),
     path('api/properties/', include('properties.urls')),
     path('api/users/', include('users.urls')),
+    path('api/investment/', include('investment.urls')),
     path('uploads/media/', include('uploads.urls'))
 ]
