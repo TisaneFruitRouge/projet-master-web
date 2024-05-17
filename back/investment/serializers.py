@@ -12,8 +12,8 @@ class InvestmentRequestSerializer(serializers.ModelSerializer):
         loan=monthly_loan(investment['credit_amount'], investment['interest_rate'], investment['credit_duration'])
         return ((investment['monthly_rent'] - investment['monthly_charges']-loan)*12 - investment['property_tax']) / investment['credit_amount']
 
-    def get_gross_profitability(self, investment):
-        return (investment['monthly_rent'] * 12) / investment['credit_amount']
+    def get_gross_profitability(self, investment, price):
+        return (investment['monthly_rent'] * 12) / investment['credit_amount'] / price
 
     # prix de vente + (12 * monthly_rent) - property_tax
     # todo : edit
