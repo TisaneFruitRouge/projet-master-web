@@ -15,7 +15,7 @@ export type Investment = {
 	id: string;
 	user_id: string;
 	property_id: string;
-	simulation_date: Date | null;
+	simulation_date: string | null;
 	monthly_rent: number;
 	monthly_charges: number;
 	property_tax: number;

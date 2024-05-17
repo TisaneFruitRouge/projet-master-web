@@ -37,12 +37,12 @@ export default function SimulateInvestment({property}: EstimateInvestmentProps) 
 		const newSimulation = await makePropertyInvestmentSimulation(investment);
 
 		if (newSimulation === null) {
-			toast("Error while adding the simulation", {
-				description: "We couldn't successfully add the new simulation to the property"
+			toast("Une erreur est survenue lors de la simulation", {
+				description: "Nous n'avons pas pu réaliser une simulation pour la propriété"
 			});
 		} else {
-			toast("New simulation added successfully", {
-				description: "The simulation was added to your property"
+			toast("Simulation réussie", {
+				description: "Une simulation a été réalisée pour cette propriété"
 			});
 			clearInputs();
 			window.location.reload()
@@ -61,88 +61,87 @@ export default function SimulateInvestment({property}: EstimateInvestmentProps) 
 	return (
 		<Dialog>
 		<DialogTrigger asChild>
-			<Button>Estimate investment</Button>
+			<Button>Simuler mon investissement</Button>
 		</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Estimate an investment</DialogTitle>
+					<DialogTitle>Simuler mon investissement</DialogTitle>
 				</DialogHeader>
 					<div className="flex flex-col gap-2">
-						<h2 className="mt-2 text-base font-semibold text-gray-900">Property Informations</h2>
+						<h2 className="mt-2 text-base font-semibold text-gray-900">Information sur la propriété</h2>
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
 							<div className="sm:col-span-3">
-								<label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">Monthly Rent (€)</label>
+								<label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">Loyer mensuel (€)</label>
 								<Input
 									type="number"
 									id="price"
 									value={rentInput}
 									min={0}
-									onChange={(e) => setRentInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setRentInput(parseInt(e.target.value))}
 								/>
 							</div>
 							<div className="sm:col-span-3">
-								<label htmlFor="charge" className="block text-sm font-medium leading-6 text-gray-900">Monthly Charges (€)</label>
+								<label htmlFor="charge" className="block text-sm font-medium leading-6 text-gray-900">Charges mensuelles (€)</label>
 								<Input
 									type="number"
 									min={0}
 									value={chargeInput}
 									id="charge"
-									onChange={(e) => setChargeInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setChargeInput(parseInt(e.target.value))}
 								/>
 							</div>
 							<div className="sm:col-span-3">
-								<label htmlFor="property-tax" className="block text-sm font-medium leading-6 text-gray-900">Property Tax (€)</label>
+								<label htmlFor="property-tax" className="block text-sm font-medium leading-6 text-gray-900">Taxe foncière (/an) (€)</label>
 								<Input
 									type="number"
 									min={0}
 									value={propertyTaxInput}
 									id="property-tax"
-									onChange={(e) => setPropertyTaxInput(parseFloat(e.target.value) || 0)}
+									onChange={(e) => setPropertyTaxInput(parseFloat(e.target.value))}
 								/>
 							</div>
 						</div>
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<h2 className="mt-2 text-base font-semibold text-gray-900">Credit Informations</h2>
+						<h2 className="mt-2 text-base font-semibold text-gray-900">Votre emprunt</h2>
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
 							<div className="sm:col-span-3">
-								<label htmlFor="credit" className="block text-sm font-medium leading-6 text-gray-900">Credit (€)</label>
+								<label htmlFor="credit" className="block text-sm font-medium leading-6 text-gray-900">Montant total (€)</label>
 								<Input
 									type="number"
 									min={0}
 									value={creditInput}
 									id="credit"
-									onChange={(e) => setCreditInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setCreditInput(parseInt(e.target.value))}
 								/>
 							</div>
 							<div className="sm:col-span-3">
-								<label htmlFor="credit-duration" className="block text-sm font-medium leading-6 text-gray-900">Credit Duration
-									(months)</label>
+								<label htmlFor="credit-duration" className="block text-sm font-medium leading-6 text-gray-900">Durée (mois)</label>
 								<Input
 									type="number"
 									id="credit-duration"
 									value={creditDurationInput}
 									min={0}
-									onChange={(e) => setCreditDurationInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setCreditDurationInput(parseInt(e.target.value))}
 								/>
 							</div>
 							<div className="sm:col-span-3">
-								<label htmlFor="rate" className="block text-sm font-medium leading-6 text-gray-900">Interest Rate (%)</label>
+								<label htmlFor="rate" className="block text-sm font-medium leading-6 text-gray-900">Taux d'intérêt (%)</label>
 								<Input
 									type="number"
 									min={0}
 									value={rateInput}
 									step="0.05"
 									id="rate"
-									onChange={(e) => setRateInput(parseFloat(e.target.value) || 0)}
+									onChange={(e) => setRateInput(parseFloat(e.target.value))}
 								/>
 							</div>
 						</div>
 					</div>
 					<DialogFooter>
 						<DialogClose asChild>
-							<Button onClick={estimateInvestment}>Estimate</Button>
+							<Button onClick={estimateInvestment}>Simuler</Button>
 						</DialogClose>
 					</DialogFooter>
 			</DialogContent>

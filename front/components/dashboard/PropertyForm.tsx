@@ -12,15 +12,18 @@ import { useAuth } from "@clerk/nextjs";
 
 import { toast } from "sonner"
 import { AutocompleteResponse, Address } from "@/lib/types/autocomplete";
+import { ECityNames, cities } from "@/lib/types/city";
 
 export default function AddProperty() {
 
 	const [nameInput, setNameInput] = useState("");
 	
 	const [addressInput, setAddressInput] = useState("");
+	const [addressValide, setAddressValide] = useState(false);
 	const [postalInput, setPostalInput] = useState(0);
 	const [latInput, setLatInput] = useState(0);
 	const [lonInput, setLonInput] = useState(0);
+	const [city, setCity] = useState<string | null>(null);
 
 	const [propertyType, setPropertyType] = useState<PropertyType>(1);
 
@@ -28,13 +31,12 @@ export default function AddProperty() {
 	const [bedroomInput, setBedroomInput] = useState(0);
 	const [roomInput, setRoomInput] = useState(0);
 	const [floorInput, setFloorInput] = useState(0);
-	const [constructionInput, setConstructionInput] = useState(0);
+	const [constructionInput, setConstructionInput] = useState(2000);
 
 	const [elevatorInput, setElevatorInput] = useState(false);
 	const [furnishedInput, setFurnishedInput] = useState(false);
 	const [parkingSpaceInput, setParkingSpaceInput] = useState(false);
 	const [gardenInput, setGardenInput] = useState(false);
-
 
 	const [pictureInput, setPictureInput] = useState("");
 	const [fileInput, setFileInput] = useState<File>();
@@ -77,47 +79,62 @@ export default function AddProperty() {
 	};
 
 	const loadAddress = ({properties, geometry}: Address) => {
+		setCity(properties.city.toLowerCase());
 		setAddressInput(properties.label);
 		setPostalInput(parseInt(properties.citycode));
 		setLatInput(geometry.coordinates[0]);
 		setLonInput(geometry.coordinates[1]);
 		setAutocompleteResults([]);
+		setAddressValide(true);
 	}
 
 	const submitNewProperty = async () => {
-
-		if (!userId) { // should not happen
-			return;
+		if(addressInput==""){
+			toast("Plusieurs élements du formulaire ne sont pas renseignés", {
+				description: "Veuillez renseigner ces derniers !"
+			});
 		}
+		else if(!addressValide){
+			toast("L'adresse saisie est invalide.", {
+				description: "Merci de sélectionner une adresse proposée !"
+			});
+		}
+		else if (city !== null && !cities.includes(city.toLowerCase() as ECityNames)) {
+			toast("La ville saisie n'est pas disponible pour un estimation", {
+				description: `Les villes dispinibles sont ${cities.map(city=>(city as string).charAt(0).toUpperCase() + (city as string).slice(1)).join(', ')}.`
+			});
+		} else {
+			if (!userId) { // should not happen
+				return;
+			}
 
-		if (fileInput) {
-			let fileReader = new FileReader();
-			fileReader.onload = async (event) => {
-				let content = event.target?.result;
-				if (content instanceof ArrayBuffer) {
-					// todo : to edit with good way
-					content = content.toString();
+			if (fileInput) {
+				let fileReader = new FileReader();
+				fileReader.onload = async (event) => {
+					let content = event.target?.result;
+					if (content instanceof ArrayBuffer) {
+						// todo : to edit with good way
+						content = content.toString();
+					}
+					fileContent = content;
+					console.log("called with file");
+					await addProperty();
 				}
-				fileContent = content;
-				console.log("called with file");
+				fileReader.readAsDataURL(fileInput);
+			}else {
+				console.log("called without file")
 				await addProperty();
 			}
-			fileReader.readAsDataURL(fileInput);
-		}else {
-			console.log("called without file")
-			await addProperty();
 		}
-
-
 	}
 
 	const addProperty = async () => {
-
 		const property:Property = {
 			id: '', // id will be given by the backend
 			user_id: userId ?? '',
 			name: nameInput || 'New Property',
 			adress: addressInput,
+			city: city as ECityNames,
 			lat: latInput,
 			long: lonInput,
 			created_at: new Date(),
@@ -132,7 +149,7 @@ export default function AddProperty() {
 			bedroom: bedroomInput,
 			room: roomInput,
 			floor: floorInput,
-			cityDepartmentCode: postalInput, // todo : to edit	
+			cityDepartmentCode: postalInput, 
 			is_sold: null,
 			sold_price: null,
 			sold_date: null
@@ -164,6 +181,7 @@ export default function AddProperty() {
 		setAddressInput("");
 		setPostalInput(0);
 		setPropertyType(1);
+		setCity(null);
 		setSurfaceInput(0);
 		setBedroomInput(0);
 		setRoomInput(0);
@@ -174,6 +192,7 @@ export default function AddProperty() {
 		setFurnishedInput(false);
 		setParkingSpaceInput(false);
 		setGardenInput(false);
+		setAddressValide(false);
 	}
 
 	return (
@@ -183,9 +202,9 @@ export default function AddProperty() {
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:w-[1000px]  overflow-y-scroll">
 				<SheetHeader>
-					<SheetTitle>Add a new property</SheetTitle>
+					<SheetTitle>Ajouter une nouvelle propriété</SheetTitle>
 					<SheetDescription>
-						Fill all the following fields.
+						Renseigner les élements suivants.
 					</SheetDescription>
 				</SheetHeader>
 
@@ -233,9 +252,9 @@ export default function AddProperty() {
 									id="adresse" 
 									placeholder="Adresse" 
 									value={addressInput}
-									onChange={(e) => {setAddressInput(e.target.value); getAdressAutocomplete(e.target.value);}}
+									onChange={(e) => {setAddressInput(e.target.value); setAddressValide(false);getAdressAutocomplete(e.target.value);}}
 								/>
-								{autocompleteResults && (
+								{autocompleteResults && autocompleteResults.length>0 && (
 									<div className="p-1 absolute mt-2 mr-5 rounded-lg shadow-lg border-2 border-black/10 bg-white" >
 										{autocompleteResults.map((result, index) => (
 											<button className="hover:bg-gray-100 rounded-lg p-1 my-1 w-full text-wrap" key={index} onClick={(e) => loadAddress(result)}>
@@ -261,57 +280,57 @@ export default function AddProperty() {
 									placeholder="Surface" 
 									value={surfaceInput} 
 									min={0}
-									onChange={(e) => setSurfaceInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setSurfaceInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 							<div className="sm:col-span-3">
-								<label htmlFor="bedroom" className="block text-sm font-medium leading-6 text-gray-900">Number of Bedrooms</label>
+								<label htmlFor="bedroom" className="block text-sm font-medium leading-6 text-gray-900">Nombre de chambres</label>
 								<Input 
 									type="number" 
 									id="bedroom" 
-									placeholder="Nb de chambres" 
+									placeholder="Nombre de chambres" 
 									value={bedroomInput} 
 									min={0}
-									onChange={(e) => setBedroomInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setBedroomInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 							<div className="sm:col-span-3">
-								<label htmlFor="room" className="block text-sm font-medium leading-6 text-gray-900">Number of rooms</label>
+								<label htmlFor="room" className="block text-sm font-medium leading-6 text-gray-900">Nombre de pièces</label>
 								<Input 
 									type="number" 
 									id="room" 
-									placeholder="Nb de chambres" 
+									placeholder="Nombre de pièces" 
 									value={roomInput} 
 									min={0}
-									onChange={(e) => setRoomInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setRoomInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Floor</label>
+								<label htmlFor="floor" className="block text-sm font-medium leading-6 text-gray-900">Etage</label>
 								<Input 
 									type="number" 
 									id="floor" 
-									placeholder="Sol" 
+									placeholder="Etage" 
 									value={floorInput} 
 									min={0}
-									onChange={(e) => setFloorInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setFloorInput(parseInt(e.target.value))}
 								/>
 							</div>
 
 
 							<div className="sm:col-span-3">
-								<label htmlFor="construction" className="block text-sm font-medium leading-6 text-gray-900">Year or construction</label>
+								<label htmlFor="construction" className="block text-sm font-medium leading-6 text-gray-900">Année de construction</label>
 								<Input
 									type="number"
 									id="construction"
 									placeholder="Année de construction"
 									value={constructionInput}
 									min={0}
-									onChange={(e) => setConstructionInput(parseInt(e.target.value) || 0)}
+									onChange={(e) => setConstructionInput(parseInt(e.target.value))}
 								/>
 							</div>
 
@@ -319,7 +338,7 @@ export default function AddProperty() {
 							<div className="sm:col-span-4 flex flex-col gap-2">
 								<div className="flex items-center gap-1">
 									<Checkbox id="elevator"
-											  onCheckedChange={(e) => setElevatorInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setElevatorInput(Boolean(e))}
 											  checked={elevatorInput}
 									/>
 									<label htmlFor="elevator"
@@ -327,7 +346,7 @@ export default function AddProperty() {
 								</div>
 								<div className="flex items-center gap-1">
 									<Checkbox id="furnished"
-											  onCheckedChange={(e) => setFurnishedInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setFurnishedInput(Boolean(e))}
 											  checked={furnishedInput}
 									/>
 									<label htmlFor="furnished"
@@ -335,7 +354,7 @@ export default function AddProperty() {
 								</div>
 								<div className="flex items-center gap-1">
 									<Checkbox id="parkingSpace"
-											  onCheckedChange={(e) => setParkingSpaceInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setParkingSpaceInput(Boolean(e))}
 											  checked={parkingSpaceInput}
 									/>
 									<label htmlFor="parkingSpace"
@@ -343,7 +362,7 @@ export default function AddProperty() {
 								</div>
 								<div className="flex items-center gap-1">
 									<Checkbox id="garden"
-											  onCheckedChange={(e) => setGardenInput(Boolean(e.valueOf))}
+											  onCheckedChange={(e) => setGardenInput(Boolean(e))}
 											  checked={gardenInput}
 									/>
 									<label htmlFor="garden"
@@ -354,7 +373,7 @@ export default function AddProperty() {
 					</div>
 
 					<div>
-						<label htmlFor="pictures" className="block text-sm font-medium leading-6 text-gray-900">Images of property</label>
+						<label htmlFor="pictures" className="block text-sm font-medium leading-6 text-gray-900">Images de la propriété</label>
 						<Input 
 							type="file" 
 							id="pictures" 
@@ -365,9 +384,9 @@ export default function AddProperty() {
 					</div>
 
 					<div className="flex gap-2">
-						<Button className="w-1/2" onClick={submitNewProperty} type="submit" id="submit">Add property</Button>
+						<Button className="w-1/2" onClick={submitNewProperty} type="submit" id="submit">Ajouter</Button>
 						<SheetClose asChild>
-							<Button variant="outline" className="w-1/2" id="cancel">Cancel</Button>
+							<Button variant="outline" className="w-1/2" id="cancel">Annuler</Button>
 						</SheetClose>
 					</div>
 

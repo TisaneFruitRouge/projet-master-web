@@ -9,6 +9,7 @@ from datetime import date
 
 from prediction.models import Prediction
 from prediction.serializers import PredictionSerializer
+from properties.models import Property
 
 @api_view(['POST'])
 def prediction(request):
@@ -21,7 +22,11 @@ def prediction(request):
         if serializer.is_valid():
             request = serializer.data
 
-            with open(f'ai-models/v1_gbr_lille.sav', 'rb') as f:
+            property = Property.objects.filter(id=request["property_id"]).all()
+            print(property)
+            city = property[0].city
+            print(city)
+            with open(f'ai-models/{city}.sav', 'rb') as f:
                 clf = pickle.load(f)
                 inputData = {
                     'elevator': request['hasElevator'], 
