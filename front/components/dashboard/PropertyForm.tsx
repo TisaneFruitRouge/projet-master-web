@@ -198,7 +198,7 @@ export default function AddProperty() {
 	return (
 		<Sheet onOpenChange={clearInputs}>
 			<SheetTrigger className="flex justify-start">
-				<p className="w-48 font-medium bg-black text-white rounded pt-2.5 pb-2.5 pl-0.5 pr-0.5">Add new property</p>
+				<p className="w-48 font-medium bg-black text-white rounded pt-2.5 pb-2.5 pl-0.5 pr-0.5">Ajouter un bien</p>
 			</SheetTrigger>
 			<SheetContent className="w-[400px] sm:w-[1000px]  overflow-y-scroll">
 				<SheetHeader>

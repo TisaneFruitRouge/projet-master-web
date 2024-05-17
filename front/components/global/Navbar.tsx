@@ -41,16 +41,6 @@ export default function Navbar() {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Estimer</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="flex p-6 md:w-[200px] lg:w-[250px]">
-              <ListItem href="/estimate/roi" title="Rentabilité">
-                {"Estimer la rentabilité d'un investissement."}
-              </ListItem>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
           <NavigationMenuTrigger>Explorer</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">

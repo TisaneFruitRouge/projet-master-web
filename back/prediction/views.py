@@ -23,10 +23,9 @@ def prediction(request):
             request = serializer.data
 
             property = Property.objects.filter(id=request["property_id"]).all()
-            print(property)
             city = property[0].city
-            print(city)
-            with open(f'ai-models/{city}.sav', 'rb') as f:
+
+            with open(f'prediction/ai-models/{city}.sav', 'rb') as f:
                 clf = pickle.load(f)
                 inputData = {
                     'elevator': request['hasElevator'], 

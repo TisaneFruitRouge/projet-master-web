@@ -43,9 +43,11 @@ export default async function PropertyPage({ params }: { params: { id: string } 
             </div>
             <div className="flex justify-between gap-4 p-4 border border-solid border-black/10 rounded-md">
                 <Image 
-                    className="rounded-sm w-fit"
+                    className="rounded-sm w-[350px] h-[256px] object-cover"
                     src={property.image ?? NoImage}
                     alt="Property" 
+                    width={350}
+                    height={256}
                 />
                 <div className="flex flex-col gap-8 w-full">
                     <div className="relative">

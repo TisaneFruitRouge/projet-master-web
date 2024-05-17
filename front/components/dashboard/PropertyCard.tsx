@@ -44,7 +44,7 @@ export default function PropertyCard({property}: PropertyCardProps) {
 					<div className="title-price md:flex justify-between">
 						<span className="title font-medium text-lg">{property.name}</span>
 					</div>
-					<p className="location">Strasbourg</p>
+					<p className="location">{property.city.charAt(0).toUpperCase() + property.city.slice(1)}</p>
 					<div className="flex flex-wrap text-xs gap-2 ">
 						<Badge>{property.surface} m²</Badge>
 						<Badge>{property.room} pièces</Badge>

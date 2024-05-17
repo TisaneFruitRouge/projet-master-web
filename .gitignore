@@ -11,3 +11,4 @@ back/ai-models/*
 back/back/__pycache__/
 
 front/yarn.lock
+ai-models
