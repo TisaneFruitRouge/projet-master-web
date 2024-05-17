@@ -127,7 +127,7 @@ export default function SimulateInvestment({property}: EstimateInvestmentProps) 
 								/>
 							</div>
 							<div className="sm:col-span-3">
-								<label htmlFor="rate" className="block text-sm font-medium leading-6 text-gray-900">Taux d'intérêt (%)</label>
+								<label htmlFor="rate" className="block text-sm font-medium leading-6 text-gray-900">Taux d&apos;intérêt (%)</label>
 								<Input
 									type="number"
 									min={0}
