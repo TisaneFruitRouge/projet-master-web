@@ -5,6 +5,8 @@ from investment.models import Investment
 from investment.serializers import InvestmentSerializer, InvestmentRequestSerializer
 from datetime import date
 
+from prediction.models import Prediction
+from prediction.serializers import PredictionSerializer
 from prediction.views import get_prediction
 
 
@@ -30,13 +32,15 @@ def investment_list(request, property_id):
 
                 property_id = request['property_id']
 
-                # todo : TRI
-                # property_prediction = get_prediction(property_id)
-                # print(property_prediction)
+                prediction = Prediction.objects.get(property_id=property_id)
+                prediction_serializer = PredictionSerializer(prediction)
+                prediction_price = prediction_serializer.data.get('price')
+
+                print('prediction price', prediction_price)
 
                 request['simulation_date'] = date.today()
-                request['net_profitability'] = serializer.get_net_profitability(request)
-                request['gross_profitability'] = serializer.get_gross_profitability(request)
+                request['net_profitability'] = serializer.get_net_profitability(request, prediction_price)
+                request['gross_profitability'] = serializer.get_gross_profitability(request, prediction_price)
                 request['internal_rate_of_profitability'] = serializer.get_internal_rate_of_profitability(request)
                 request['monthly_cashflow'] = serializer.get_monthly_cashflow(request)
 
