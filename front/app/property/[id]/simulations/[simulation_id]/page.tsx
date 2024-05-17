@@ -15,6 +15,7 @@ export default async function InvestmentSimulationList({params}: {params: {id: s
                         <div><b>Montant</b>: {investment.credit_amount} €</div>
                         <div><b>Durée</b>: {investment.credit_duration} mois</div>
                         <div><b>Taux</b>: {investment.interest_rate} %</div>
+                        <div><b>Taux</b>: {investment.internal_rate_of_profitability.toFixed(2)} €/mois</div>
                         <Separator className="my-4"/>
                         <div><b>Loyer</b>: {investment.monthly_rent} €/mois</div>
                         <div><b>Charges mensuelles</b>: {investment.monthly_charges} €/mois</div>
@@ -30,9 +31,6 @@ export default async function InvestmentSimulationList({params}: {params: {id: s
                             </div>
                             <div>
                                 Renta. nette: {(investment.net_profitability*100).toPrecision(3)}%
-                            </div>
-                            <div>
-                                TRI: {investment.interest_rate}%
                             </div>
                         </div>
                     </div>

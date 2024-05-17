@@ -24,7 +24,7 @@ export type Investment = {
 	interest_rate: number;
 	net_profitability: number;
 	gross_profitability: number;
-	interest_rate_of_profitability: number;
+	internal_rate_of_profitability: number;
 	monthly_cashflow: number;
 }
 

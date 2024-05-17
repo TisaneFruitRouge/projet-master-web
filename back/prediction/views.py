@@ -25,7 +25,7 @@ def prediction(request):
             property = Property.objects.filter(id=request["property_id"]).all()
             city = property[0].city
 
-            with open(f'prediction/ai-models/{city}.sav', 'rb') as f:
+            with open(f'ai-models/{city}.sav', 'rb') as f:
                 clf = pickle.load(f)
                 inputData = {
                     'elevator': request['hasElevator'], 
